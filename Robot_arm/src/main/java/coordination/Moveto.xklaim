@@ -1,0 +1,46 @@
+package Coordination
+
+import ros.RosBridge
+import ros.Publisher
+import coordination.PoseStamped
+import ros.msgs.geometry_msgs.Twist
+
+proc Moveto(Locality arm) {
+		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
+
+	// Create the bridge and connect it to the ROS bridge
+	val bridge = new RosBridge()
+	bridge.connect(rosbridgeWebsocketURI, true)
+
+	// Initialize a publisher for the topic related to the control of the robot's wheels
+    val  pub = new Publisher("/robot1/move_base_simple/goal", "geometry_msgs/PoseStamped", bridge);
+    
+    //val pubvel = new Publisher("/robot3/cmd_vel", "geometry_msgs/Twist", bridge);
+		// Consume a velocity tuple
+		//out("position", "world", 3, 4, 1)@self
+		     
+	  in("goto1", var String frame_id, var Double x, var Double y, var Double w)@self
+		
+				// Create a ROS message Twist, and populate it with the tuple data
+		val posesta = new PoseStamped();
+		//val twist = new Twist();
+           posesta.header.frame_id = frame_id;
+           posesta.pose.position.x= x;
+           posesta.pose.position.y= y;
+           posesta.pose.orientation.w= w;
+		pub.publish(posesta);		
+	    out("arrived", "arrived")@arm 
+	    val pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);	    
+	    val twistMsg = new Twist();
+	    twistMsg.linear.x=0.0;
+	    twistMsg.angular.y=0.0;
+	    pubvel.publish(twistMsg);		
+	    out("ready", "ready")@arm 
+	    
+		
+	
+}
+
+
+
+

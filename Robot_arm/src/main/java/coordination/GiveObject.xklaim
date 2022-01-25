@@ -1,0 +1,57 @@
+package Coordination
+
+import ros.RosBridge
+import ros.Publisher
+import coordination.PoseStamped
+import coordination.Twist
+import ros.SubscriptionRequestMsg
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.JsonNode
+import coordination.ContactsState
+
+proc GiveObject() {
+		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
+		val myself=self
+	// Create the bridge and connect it to the ROS bridge
+	  in("open", var String gripper)@myself
+    println(String.format("The %s is opening", gripper));
+	val bridge = new RosBridge()
+	bridge.connect(rosbridgeWebsocketURI, true)
+
+	// Initialize a publisher for the topic related to the control of the robot's arm
+    val  pub = new Publisher("/robot1/move_base_simple/goal", "geometry_msgs/PoseStamped", bridge);
+    
+    
+    bridge.subscribe(
+		SubscriptionRequestMsg.generate("/robot1/pressure_sensor_state").setType("gazebo_msgs/ContactsState").
+			setThrottleRate(1).setQueueLength(1), [ data, stringRep |
+			var mapper = new ObjectMapper();
+			var JsonNode rosMsgNode = data.get("msg");
+				try{
+				var ContactsState state = mapper.treeToValue(rosMsgNode, ContactsState);	
+			//	print(state.states.get(0).collision1_name)
+	            //unit_box_2 is the name of the object
+	 if (state.states.get(0).collision1_name == "unit_box_2::link::collision") {
+	  in("give", var String frame_id, var Double x, var Double y, var Double w)@myself
+		val giveobject = new PoseStamped();
+           giveobject.header.frame_id = frame_id;
+           giveobject.pose.position.x= x;
+           giveobject.pose.position.y= y;
+           giveobject.pose.orientation.w= w;
+		pub.publish(giveobject);
+	    val pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
+		val twistMsg = new Twist();
+	    twistMsg.linear.x=0.0;
+	    twistMsg.angular.y=0.0;
+	    pubvel.publish(twistMsg);	
+	    println(String.format("Object is given"))				                         
+		}}
+		catch(Exception e){
+			}
+		]) 
+		
+} 
+
+
+
+
