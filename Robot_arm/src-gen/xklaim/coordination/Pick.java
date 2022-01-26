@@ -1,4 +1,4 @@
-package Coordination;
+package xklaim.coordination;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import coordination.JointTrajectory;
@@ -15,7 +15,7 @@ import ros.SubscriptionRequestMsg;
 @SuppressWarnings("all")
 public class Pick extends KlavaProcess {
   public Pick() {
-    super("Coordination.Pick");
+    super("xklaim.coordination.Pick");
   }
   
   @Override

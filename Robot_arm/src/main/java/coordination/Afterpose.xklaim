@@ -1,4 +1,4 @@
-package Coordination
+package xklaim.coordination
 
 import coordination.JointTrajectory
 import coordination.JointTrajectoryPoint

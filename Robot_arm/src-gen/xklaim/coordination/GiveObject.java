@@ -1,4 +1,4 @@
-package Coordination;
+package xklaim.coordination;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +19,7 @@ import ros.SubscriptionRequestMsg;
 @SuppressWarnings("all")
 public class GiveObject extends KlavaProcess {
   public GiveObject() {
-    super("Coordination.GiveObject");
+    super("xklaim.coordination.GiveObject");
   }
   
   @Override

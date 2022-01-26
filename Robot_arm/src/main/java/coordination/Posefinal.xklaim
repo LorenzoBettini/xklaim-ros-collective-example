@@ -1,4 +1,4 @@
-package Coordination
+package xklaim.coordination
 
 import ros.RosBridge
 import ros.Publisher

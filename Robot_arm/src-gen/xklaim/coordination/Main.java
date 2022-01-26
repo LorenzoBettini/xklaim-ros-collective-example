@@ -1,6 +1,4 @@
-package Coordination;
-
-import Coordination.RobotColl;
+package xklaim.coordination;
 
 @SuppressWarnings("all")
 public class Main {

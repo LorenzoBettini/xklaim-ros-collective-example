@@ -1,15 +1,5 @@
-package Coordination;
+package xklaim.coordination;
 
-import Coordination.After_pick;
-import Coordination.Afterpose;
-import Coordination.Before_pick;
-import Coordination.GiveObject;
-import Coordination.Grasp;
-import Coordination.Moveto;
-import Coordination.OpenGripper;
-import Coordination.Pick;
-import Coordination.Pose;
-import Coordination.Posefinal;
 import klava.LogicalLocality;
 import klava.PhysicalLocality;
 import klava.topology.ClientNode;

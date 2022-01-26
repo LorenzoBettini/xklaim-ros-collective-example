@@ -1,4 +1,4 @@
-package Coordination;
+package xklaim.coordination;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import coordination.JointTrajectory;
@@ -20,7 +20,7 @@ public class Afterpose extends KlavaProcess {
   private Locality robot2;
   
   public Afterpose(final Locality robot2) {
-    super("Coordination.Afterpose");
+    super("xklaim.coordination.Afterpose");
     this.robot2 = robot2;
   }
   

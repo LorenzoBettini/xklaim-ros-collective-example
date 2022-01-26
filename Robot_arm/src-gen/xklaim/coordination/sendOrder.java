@@ -1,4 +1,4 @@
-package Coordination;
+package xklaim.coordination;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ public class sendOrder extends KlavaProcess {
   private Locality robot2;
   
   public sendOrder(final Locality robot2) {
-    super("Coordination.sendOrder");
+    super("xklaim.coordination.sendOrder");
     this.robot2 = robot2;
   }
   

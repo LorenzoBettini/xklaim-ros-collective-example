@@ -1,4 +1,4 @@
-package Coordination;
+package xklaim.coordination;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import coordination.JointTrajectory;
@@ -16,7 +16,7 @@ import ros.SubscriptionRequestMsg;
 @SuppressWarnings("all")
 public class After_pick extends KlavaProcess {
   public After_pick() {
-    super("Coordination.After_pick");
+    super("xklaim.coordination.After_pick");
   }
   
   @Override

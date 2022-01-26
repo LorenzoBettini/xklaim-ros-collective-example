@@ -1,4 +1,4 @@
-package Coordination;
+package xklaim.coordination;
 
 import coordination.PoseStamped;
 import klava.Locality;
@@ -13,7 +13,7 @@ public class Moveto extends KlavaProcess {
   private Locality arm;
   
   public Moveto(final Locality arm) {
-    super("Coordination.Moveto");
+    super("xklaim.coordination.Moveto");
     this.arm = arm;
   }
   

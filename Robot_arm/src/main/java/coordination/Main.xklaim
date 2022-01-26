@@ -1,4 +1,4 @@
-package Coordination 
+package xklaim.coordination 
 
 
 net RobotColl physical "localhost:9999" {

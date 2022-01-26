@@ -1,4 +1,4 @@
-package Coordination;
+package xklaim.coordination;
 
 import coordination.JointTrajectory;
 import coordination.JointTrajectoryPoint;
@@ -12,7 +12,7 @@ import ros.RosBridge;
 @SuppressWarnings("all")
 public class Before_pick extends KlavaProcess {
   public Before_pick() {
-    super("Coordination.Before_pick");
+    super("xklaim.coordination.Before_pick");
   }
   
   @Override
