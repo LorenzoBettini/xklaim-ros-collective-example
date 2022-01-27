@@ -2,11 +2,9 @@ package xklaim.coordination;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import coordination.JointTrajectory;
-import coordination.JointTrajectoryPoint;
 import java.util.Arrays;
 import java.util.List;
 import klava.topology.KlavaProcess;
-import org.eclipse.xtext.xbase.lib.Conversions;
 import ros.Publisher;
 import ros.RosBridge;
 import ros.RosListenDelegate;
@@ -39,18 +37,9 @@ public class Grasp extends KlavaProcess {
       final double norm = Math.sqrt(sum);
       final double tol = 0.00001;
       if ((norm <= tol)) {
-        final JointTrajectoryPoint jointTrajectoryPoints = new JointTrajectoryPoint();
-        jointTrajectoryPoints.positions = ((double[])Conversions.unwrapArray(Arrays.<Double>asList(Double.valueOf(0.019927757424255833), Double.valueOf((-0.010904802339570573))), double.class));
-        jointTrajectoryPoints.time_from_start.nsecs = 0;
-        jointTrajectoryPoints.time_from_start.secs = 120;
-        final JointTrajectory grasp = new JointTrajectory();
-        List<JointTrajectoryPoint> list = Arrays.<JointTrajectoryPoint>asList(jointTrajectoryPoints);
-        final List<JointTrajectoryPoint> _converted_list = (List<JointTrajectoryPoint>)list;
-        grasp.points = ((JointTrajectoryPoint[])Conversions.unwrapArray(_converted_list, JointTrajectoryPoint.class));
-        grasp.joint_names = ((String[])Conversions.unwrapArray(Arrays.<String>asList("f_joint1", "f_joint2"), String.class));
-        grasp.header.stamp.secs = 0;
-        grasp.header.stamp.nsecs = 0;
-        grasp.header.frame_id = "";
+        final JointTrajectory grasp = new JointTrajectory().positions(
+          new double[] { 0.019927757424255833, (-0.010904802339570573) }).jointNames(
+          new String[] { "f_joint1", "f_joint2" });
         pub.publish(grasp);
         bridge.unsubscribe("/arm_controller/state");
       }

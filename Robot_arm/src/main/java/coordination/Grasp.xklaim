@@ -1,7 +1,6 @@
 package xklaim.coordination
 
 import coordination.JointTrajectory
-import coordination.JointTrajectoryPoint
 import java.util.Arrays
 import java.util.List
 import ros.Publisher
@@ -37,17 +36,13 @@ proc Grasp() {
 
 			if (norm <= tol) {
 				// if the robot finish the second action, should perform the third action "grasp" using only gripper not the arm 
-				val jointTrajectoryPoints = new JointTrajectoryPoint();
-				jointTrajectoryPoints.positions = Arrays.asList(0.019927757424255833, -0.010904802339570573);
-				jointTrajectoryPoints.time_from_start.nsecs = 0;
-				jointTrajectoryPoints.time_from_start.secs = 120;
-				val JointTrajectory grasp = new JointTrajectory();
-				var List<JointTrajectoryPoint> list = Arrays.asList(jointTrajectoryPoints);
-				grasp.points = list;
-				grasp.joint_names = Arrays.asList("f_joint1", "f_joint2");
-				grasp.header.stamp.secs = 0;
-				grasp.header.stamp.nsecs = 0;
-				grasp.header.frame_id = "";
+				val JointTrajectory grasp = new JointTrajectory()
+					.positions(#[
+						0.019927757424255833, -0.010904802339570573
+					])
+					.jointNames(#[
+						"f_joint1", "f_joint2"
+					]);
 				pub.publish(grasp);
 				bridge.unsubscribe("/arm_controller/state");
 			}

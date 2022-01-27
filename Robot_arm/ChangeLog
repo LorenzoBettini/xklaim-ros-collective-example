@@ -14,6 +14,34 @@ method for single JointTrajectoryPoint
 
 simplified JointTrajectory creation
 
+Example of refactoring Afterpose
+
+val jointTrajectoryPoints = new JointTrajectoryPoint();
+jointTrajectoryPoints.positions = Arrays.asList(0.000, 0.000, 0.000, 0.000, 0.000, 0.000);
+// jointTrajectoryPoints.velocities=velocities;
+jointTrajectoryPoints.time_from_start.nsecs = 0;
+jointTrajectoryPoints.time_from_start.secs = 120;
+// JointTrajectory Initialization
+val JointTrajectory after_pose = new JointTrajectory();
+// val pointtraject = new JointTrajectoryPoint[]; 
+var List<JointTrajectoryPoint> list = Arrays.asList(jointTrajectoryPoints);
+after_pose.points = list;
+after_pose.joint_names = Arrays.asList("joint1", "joint2", "joint3", "joint4", "joint5", "joint6");
+after_pose.header.stamp.secs = 0;
+after_pose.header.stamp.nsecs = 0;
+after_pose.header.frame_id = "";
+
+---->
+
+val JointTrajectory afterPose = new JointTrajectory()
+	.positions(#[
+		0.000, 0.000, 0.000, 0.000, 0.000, 0.000
+	])
+	.jointNames(#[
+		"joint1", "joint2", "joint3", "joint4", "joint5", "joint6"
+	]);
+
+
 TODO
 
 consistend names for processes, e.g., AfterPose, AfterPick, etc.
