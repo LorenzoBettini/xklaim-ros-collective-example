@@ -30,4 +30,8 @@ public class JointTrajectory {
 	public JointTrajectory point(JointTrajectoryPoint point) {
 		return points(new JointTrajectoryPoint[] {point});
 	}
+
+	public JointTrajectory positions(double[] positions) {
+		return point(new JointTrajectoryPoint().positions(positions));
+	}
 }

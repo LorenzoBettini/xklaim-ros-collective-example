@@ -11,3 +11,5 @@ default new Duration(120, 0) in JointTrajectoryPoint
 
 method for single JointTrajectoryPoint
 (we always use an array with a single trajectory point)
+
+simplified JointTrajectory creation
