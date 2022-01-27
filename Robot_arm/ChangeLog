@@ -8,3 +8,6 @@ removed coordination.Header, since it's just the same as the one taken from Ros:
 default new Header(0, new Time(), "") in JointTrajectory
 
 default new Duration(120, 0) in JointTrajectoryPoint
+
+method for single JointTrajectoryPoint
+(we always use an array with a single trajectory point)

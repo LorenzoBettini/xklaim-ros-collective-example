@@ -26,4 +26,8 @@ public class JointTrajectory {
 		this.points = points;
 		return this;
 	}
+
+	public JointTrajectory point(JointTrajectoryPoint point) {
+		return points(new JointTrajectoryPoint[] {point});
+	}
 }
