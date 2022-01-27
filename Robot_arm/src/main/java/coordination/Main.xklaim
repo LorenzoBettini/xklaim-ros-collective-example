@@ -3,24 +3,17 @@ package xklaim.coordination
 
 net RobotColl physical "localhost:9999" {
 	node Arm {
-			
-	
-        executeNodeProcess(new Before_pick())
-        executeNodeProcess(new Pick())
-        executeNodeProcess(new Grasp())
-        executeNodeProcess(new After_pick())
-        executeNodeProcess(new Pose())  
-        executeNodeProcess(new Posefinal(Robot2))
-        executeNodeProcess(new OpenGripper(Robot2))
-        executeNodeProcess(new Afterpose(Robot2))     
-        
+		executeNodeProcess(new Before_pick())
+		executeNodeProcess(new Pick())
+		executeNodeProcess(new Grasp())
+		executeNodeProcess(new After_pick())
+		executeNodeProcess(new Pose())
+		executeNodeProcess(new Posefinal(Robot2))
+		executeNodeProcess(new OpenGripper(Robot2))
+		executeNodeProcess(new Afterpose(Robot2))
 	}
-    	node Robot2 {
+	node Robot2 {
 		executeNodeProcess(new Moveto(Arm))
 		executeNodeProcess(new GiveObject())
 	}
- }      
- 
-
-
- 
+}

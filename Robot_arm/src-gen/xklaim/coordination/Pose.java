@@ -26,7 +26,8 @@ public class Pose extends KlavaProcess {
     final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode actual = data.get("msg").get("actual").get("positions");
-      final List<Double> desire = Arrays.<Double>asList(Double.valueOf((-3.1417061706596003)), Double.valueOf((-0.28618833559546175)), Double.valueOf((-0.49998813405672404)), Double.valueOf(3.1396898889426783), Double.valueOf(1.6612913247682046), Double.valueOf((-0.0142)));
+      final List<Double> desire = Arrays.<Double>asList(Double.valueOf((-3.1417061706596003)), Double.valueOf((-0.28618833559546175)), Double.valueOf((-0.49998813405672404)), 
+        Double.valueOf(3.1396898889426783), Double.valueOf(1.6612913247682046), Double.valueOf((-0.0142)));
       double sum = 0.0;
       for (int i = 0; (i < 6); i = (i + 1)) {
         double _asDouble = actual.get(i).asDouble();

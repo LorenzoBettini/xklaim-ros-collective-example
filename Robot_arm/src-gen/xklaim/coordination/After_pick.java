@@ -58,6 +58,7 @@ public class After_pick extends KlavaProcess {
       }
     };
     bridge.subscribe(
-      SubscriptionRequestMsg.generate("/gripper_controller/state").setType("control_msgs/JointTrajectoryControllerState").setThrottleRate(Integer.valueOf(1)).setQueueLength(Integer.valueOf(1)), _function);
+      SubscriptionRequestMsg.generate("/gripper_controller/state").setType(
+        "control_msgs/JointTrajectoryControllerState").setThrottleRate(Integer.valueOf(1)).setQueueLength(Integer.valueOf(1)), _function);
   }
 }

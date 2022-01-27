@@ -9,49 +9,48 @@ import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
 proc Afterpose(Locality robot2) {
-		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
-		val myself=self
+	val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
+	val myself = self
 	// Create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
-      in("ready", var String ready)@myself
-       println(String.format("%s to take the object", ready));	
+	in("ready", var String ready)@myself
+	println(String.format("%s to take the object", ready));
 	// Initialize a publisher for the topic related to the control of the robot's arm
-        val  pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
-      
-    // subscribe to get the actual state of the robot's arms
-		bridge.subscribe(
-		SubscriptionRequestMsg.generate("/gripper_controller/state").setType("control_msgs/JointTrajectoryControllerState").
-			setThrottleRate(1).setQueueLength(1), [ data, stringRep |
-			val error = data.get("msg").get("actual").get("positions");	
-		    val List<Double> desire = Arrays.asList(0.000,0.000);
-		    var sum = 0.0; 
-            for (var i =0; i<= 1; i=i+1){
-            	sum = sum + Math.pow(error.get(i).asDouble()-desire.get(i),2.0);}           
-           	val tol = 0.0009;	
-            val norm = Math.sqrt(sum);
-		 if (norm <= tol) {
-		  //  out("open", "gripper_opened")@robot2
-			 //give the position of the person to the robot. 
-            val jointTrajectoryPoints = new JointTrajectoryPoint();
-            jointTrajectoryPoints.positions = Arrays.asList(0.000,0.000,0.000,0.000,0.000,0.000); 
-            //jointTrajectoryPoints.velocities=velocities;
-            jointTrajectoryPoints.time_from_start.nsecs=0;
-            jointTrajectoryPoints.time_from_start.secs=120;
-            // JointTrajectory Initialization
-            val JointTrajectory after_pose = new JointTrajectory();
-         //   val pointtraject = new JointTrajectoryPoint[]; 
-            var List<JointTrajectoryPoint> list = Arrays.asList(jointTrajectoryPoints);
-            after_pose.points = list;     
-            after_pose.joint_names = Arrays.asList("joint1", "joint2", "joint3", "joint4", "joint5", "joint6");
-           after_pose.header.stamp.secs=0;
-           after_pose.header.stamp.nsecs=0;
-           after_pose.header.frame_id = "";
-		    pub.publish(after_pose);	
-		     out("give", "world", -6.0, -5.0, 1.0)@robot2	        
-			}])
+	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
+
+	// subscribe to get the actual state of the robot's arms
+	bridge.subscribe(
+		SubscriptionRequestMsg.generate("/gripper_controller/state").setType(
+			"control_msgs/JointTrajectoryControllerState").setThrottleRate(1).setQueueLength(1), [ data, stringRep |
+			val error = data.get("msg").get("actual").get("positions");
+			val List<Double> desire = Arrays.asList(0.000, 0.000);
+			var sum = 0.0;
+			for (var i = 0; i <= 1; i = i + 1) {
+				sum = sum + Math.pow(error.get(i).asDouble() - desire.get(i), 2.0);
+			}
+			val tol = 0.0009;
+			val norm = Math.sqrt(sum);
+			if (norm <= tol) {
+				// out("open", "gripper_opened")@robot2
+				// give the position of the person to the robot. 
+				val jointTrajectoryPoints = new JointTrajectoryPoint();
+				jointTrajectoryPoints.positions = Arrays.asList(0.000, 0.000, 0.000, 0.000, 0.000, 0.000);
+				// jointTrajectoryPoints.velocities=velocities;
+				jointTrajectoryPoints.time_from_start.nsecs = 0;
+				jointTrajectoryPoints.time_from_start.secs = 120;
+				// JointTrajectory Initialization
+				val JointTrajectory after_pose = new JointTrajectory();
+				// val pointtraject = new JointTrajectoryPoint[]; 
+				var List<JointTrajectoryPoint> list = Arrays.asList(jointTrajectoryPoints);
+				after_pose.points = list;
+				after_pose.joint_names = Arrays.asList("joint1", "joint2", "joint3", "joint4", "joint5", "joint6");
+				after_pose.header.stamp.secs = 0;
+				after_pose.header.stamp.nsecs = 0;
+				after_pose.header.frame_id = "";
+				pub.publish(after_pose);
+				out("give", "world", -6.0, -5.0, 1.0)@robot2
+			}
+		]
+	)
 }
-
-
-
-

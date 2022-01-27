@@ -9,50 +9,47 @@ import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
 proc OpenGripper(Locality robot2) {
-		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
+	val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
 
 	// Create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
 
 	// Initialize a publisher for the topic related to the control of the robot's wheels
-        val  pub = new Publisher("/gripper_controller/command", "trajectory_msgs/JointTrajectory", bridge);
-      
-		bridge.subscribe(
+	val pub = new Publisher("/gripper_controller/command", "trajectory_msgs/JointTrajectory", bridge);
+
+	bridge.subscribe(
 		SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").
 			setThrottleRate(1).setQueueLength(1), [ data, stringRep |
-	
-			val actual = data.get("msg").get("actual").get("positions");					
-		    val List<Double> desire = Arrays.asList(-0.9546 , -0.0097,   -0.9513,  3.1400, 1.7749, -0.0142);
-		   
-		    var sum = 0.0; 
-            for (var i =0; i< 6; i=i+1){
-            	//sum = sum + Math.pow(error.get(i).asDouble()-desire.get(i),2.0);
-                sum = sum + Math.pow(actual.get(i).asDouble()-desire.get(i),2.0);}     
-            val norm = Math.sqrt(sum);            
-           	val tol = 0.001;	
-	 if (norm <= tol) {
-            val jointTrajectoryPoints = new JointTrajectoryPoint();
-            jointTrajectoryPoints.positions = Arrays.asList(0.000,0.0000); 
-            jointTrajectoryPoints.time_from_start.nsecs=0;
-            jointTrajectoryPoints.time_from_start.secs=120;
-            val JointTrajectory open = new JointTrajectory();
-            var List<JointTrajectoryPoint> list = Arrays.asList(jointTrajectoryPoints);
-            open.points = list;     
-           open.joint_names = Arrays.asList( "f_joint1", "f_joint2");
-           open.header.stamp.secs=0;
-            open.header.stamp.nsecs=0;
-            open.header.frame_id = "";
-		    pub.publish(open);
-		    bridge.unsubscribe("/arm_controller/state");
-		    println(String.format("I am opening"))
-		     bridge.unsubscribe("/gripper_controller/state");
-		    out("open", "gripper")@robot2	    	 	    
-			}])
+
+			val actual = data.get("msg").get("actual").get("positions");
+			val List<Double> desire = Arrays.asList(-0.9546, -0.0097, -0.9513, 3.1400, 1.7749, -0.0142);
+
+			var sum = 0.0;
+			for (var i = 0; i < 6; i = i + 1) {
+				// sum = sum + Math.pow(error.get(i).asDouble()-desire.get(i),2.0);
+				sum = sum + Math.pow(actual.get(i).asDouble() - desire.get(i), 2.0);
+			}
+			val norm = Math.sqrt(sum);
+			val tol = 0.001;
+			if (norm <= tol) {
+				val jointTrajectoryPoints = new JointTrajectoryPoint();
+				jointTrajectoryPoints.positions = Arrays.asList(0.000, 0.0000);
+				jointTrajectoryPoints.time_from_start.nsecs = 0;
+				jointTrajectoryPoints.time_from_start.secs = 120;
+				val JointTrajectory open = new JointTrajectory();
+				var List<JointTrajectoryPoint> list = Arrays.asList(jointTrajectoryPoints);
+				open.points = list;
+				open.joint_names = Arrays.asList("f_joint1", "f_joint2");
+				open.header.stamp.secs = 0;
+				open.header.stamp.nsecs = 0;
+				open.header.frame_id = "";
+				pub.publish(open);
+				bridge.unsubscribe("/arm_controller/state");
+				println(String.format("I am opening"))
+				bridge.unsubscribe("/gripper_controller/state");
+				out("open", "gripper")@robot2
+			}
+		]
+	)
 }
-
-
-
-
-
-
