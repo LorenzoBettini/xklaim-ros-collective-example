@@ -2,13 +2,11 @@ package xklaim.coordination;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import coordination.JointTrajectory;
-import coordination.JointTrajectoryPoint;
 import java.util.Arrays;
 import java.util.List;
 import klava.Locality;
 import klava.Tuple;
 import klava.topology.KlavaProcess;
-import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import ros.Publisher;
 import ros.RosBridge;
@@ -45,18 +43,9 @@ public class OpenGripper extends KlavaProcess {
       final double norm = Math.sqrt(sum);
       final double tol = 0.001;
       if ((norm <= tol)) {
-        final JointTrajectoryPoint jointTrajectoryPoints = new JointTrajectoryPoint();
-        jointTrajectoryPoints.positions = ((double[])Conversions.unwrapArray(Arrays.<Double>asList(Double.valueOf(0.000), Double.valueOf(0.0000)), double.class));
-        jointTrajectoryPoints.time_from_start.nsecs = 0;
-        jointTrajectoryPoints.time_from_start.secs = 120;
-        final JointTrajectory open = new JointTrajectory();
-        List<JointTrajectoryPoint> list = Arrays.<JointTrajectoryPoint>asList(jointTrajectoryPoints);
-        final List<JointTrajectoryPoint> _converted_list = (List<JointTrajectoryPoint>)list;
-        open.points = ((JointTrajectoryPoint[])Conversions.unwrapArray(_converted_list, JointTrajectoryPoint.class));
-        open.joint_names = ((String[])Conversions.unwrapArray(Arrays.<String>asList("f_joint1", "f_joint2"), String.class));
-        open.header.stamp.secs = 0;
-        open.header.stamp.nsecs = 0;
-        open.header.frame_id = "";
+        final JointTrajectory open = new JointTrajectory().positions(
+          new double[] { 0.000, 0.0000 }).jointNames(
+          new String[] { "f_joint1", "f_joint2" });
         pub.publish(open);
         bridge.unsubscribe("/arm_controller/state");
         InputOutput.<String>println(String.format("I am opening"));
