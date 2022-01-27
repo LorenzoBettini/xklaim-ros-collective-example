@@ -1,28 +1,26 @@
 package coordination;
 
-
 public class JointTrajectory {
-    public Header header = new Header();
-    public String[] joint_names;
-    public JointTrajectoryPoint[] points = new JointTrajectoryPoint[1];
+	public Header header = new Header();
+	public String[] joint_names;
+	public JointTrajectoryPoint[] points = new JointTrajectoryPoint[1];
 
-    public JointTrajectory(){
+	public JointTrajectory() {
 
-    }
+	}
 
-    public JointTrajectory(Header header, String[] joint_names, JointTrajectoryPoint[] points) {
-        this.header=header;
-        this.joint_names=joint_names;
-        this.points=points;
-    }
+	public JointTrajectory jointNames(String[] joint_names) {
+		this.joint_names = joint_names;
+		return this;
+	}
 
-  //  public void setPoints(JointTrajectoryPoint points) {
-    //    this.points = new JointTrajectoryPoint[]{points};
-    //}
+	public JointTrajectory header(Header header) {
+		this.header = header;
+		return this;
+	}
 
-    //public void setJoint_names(String[] joint_names) {
-      //  this.joint_names = joint_names;
-    //}
-
-
+	public JointTrajectory points(JointTrajectoryPoint[] points) {
+		this.points = points;
+		return this;
+	}
 }

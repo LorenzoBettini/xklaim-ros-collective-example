@@ -1,6 +1,8 @@
 package xklaim.coordination;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import coordination.Duration;
+import coordination.Header;
 import coordination.JointTrajectory;
 import coordination.JointTrajectoryPoint;
 import java.util.Arrays;
@@ -12,6 +14,7 @@ import ros.Publisher;
 import ros.RosBridge;
 import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
+import ros.msgs.std_msgs.Time;
 
 @SuppressWarnings("all")
 public class After_pick extends KlavaProcess {
@@ -41,19 +44,15 @@ public class After_pick extends KlavaProcess {
       double tol = 0.007;
       if ((norm <= tol)) {
         InputOutput.<String>println(String.format("I picked the object"));
-        final JointTrajectoryPoint jointTrajectoryPoints = new JointTrajectoryPoint();
-        jointTrajectoryPoints.positions = ((double[])Conversions.unwrapArray(Arrays.<Double>asList(Double.valueOf((-3.1415)), Double.valueOf((-0.2862)), Double.valueOf((-0.5000)), Double.valueOf(3.1400), Double.valueOf(1.6613), Double.valueOf((-0.0142))), double.class));
-        jointTrajectoryPoints.time_from_start.nsecs = 0;
-        jointTrajectoryPoints.time_from_start.secs = 120;
-        final JointTrajectory after_pick = new JointTrajectory();
-        List<JointTrajectoryPoint> list = Arrays.<JointTrajectoryPoint>asList(jointTrajectoryPoints);
-        final List<JointTrajectoryPoint> _converted_list = (List<JointTrajectoryPoint>)list;
-        after_pick.points = ((JointTrajectoryPoint[])Conversions.unwrapArray(_converted_list, JointTrajectoryPoint.class));
-        after_pick.joint_names = ((String[])Conversions.unwrapArray(Arrays.<String>asList("joint1", "joint2", "joint3", "joint4", "joint5", "joint6"), String.class));
-        after_pick.header.stamp.secs = 0;
-        after_pick.header.stamp.nsecs = 0;
-        after_pick.header.frame_id = "";
-        pub.publish(after_pick);
+        JointTrajectoryPoint _positions = new JointTrajectoryPoint().positions(
+          ((double[])Conversions.unwrapArray(Arrays.<Double>asList(Double.valueOf((-3.1415)), Double.valueOf((-0.2862)), Double.valueOf((-0.5000)), Double.valueOf(3.1400), Double.valueOf(1.6613), Double.valueOf((-0.0142))), double.class)));
+        Duration _duration = new Duration(120, 0);
+        final JointTrajectoryPoint jointTrajectoryPoints = _positions.timeFromStart(_duration);
+        JointTrajectory _jointNames = new JointTrajectory().points(((JointTrajectoryPoint[])Conversions.unwrapArray(Arrays.<JointTrajectoryPoint>asList(jointTrajectoryPoints), JointTrajectoryPoint.class))).jointNames(((String[])Conversions.unwrapArray(Arrays.<String>asList("joint1", "joint2", "joint3", "joint4", "joint5", "joint6"), String.class)));
+        Time _time = new Time();
+        Header _header = new Header(0, _time, "");
+        final JointTrajectory afterPick = _jointNames.header(_header);
+        pub.publish(afterPick);
         bridge.unsubscribe("/gripper_controller/state");
       }
     };
