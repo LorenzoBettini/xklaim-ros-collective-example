@@ -1,5 +1,7 @@
 package coordination;
 
+import ros.msgs.std_msgs.Header;
+
 public class JointTrajectory {
 	public Header header = new Header();
 	public String[] joint_names;

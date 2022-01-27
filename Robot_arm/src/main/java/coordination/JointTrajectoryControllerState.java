@@ -1,5 +1,6 @@
 package coordination;
 
+import ros.msgs.std_msgs.Header;
 
 public class JointTrajectoryControllerState {
 

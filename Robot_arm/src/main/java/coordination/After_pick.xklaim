@@ -1,5 +1,6 @@
 package xklaim.coordination
 
+import coordination.Duration
 import coordination.JointTrajectory
 import coordination.JointTrajectoryPoint
 import java.util.Arrays
@@ -7,8 +8,7 @@ import java.util.List
 import ros.Publisher
 import ros.RosBridge
 import ros.SubscriptionRequestMsg
-import coordination.Duration
-import coordination.Header
+import ros.msgs.std_msgs.Header
 import ros.msgs.std_msgs.Time
 
 proc After_pick() {

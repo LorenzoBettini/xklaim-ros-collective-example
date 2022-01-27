@@ -1,5 +1,7 @@
 package coordination;
 
+import ros.msgs.std_msgs.Header;
+
 public class ContactsState {
     public Header header = new Header();
     public ContactState[] states = new ContactState[1];

@@ -2,7 +2,6 @@ package xklaim.coordination;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import coordination.Duration;
-import coordination.Header;
 import coordination.JointTrajectory;
 import coordination.JointTrajectoryPoint;
 import java.util.Arrays;
@@ -14,6 +13,7 @@ import ros.Publisher;
 import ros.RosBridge;
 import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
+import ros.msgs.std_msgs.Header;
 import ros.msgs.std_msgs.Time;
 
 @SuppressWarnings("all")
