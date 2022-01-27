@@ -13,3 +13,7 @@ method for single JointTrajectoryPoint
 (we always use an array with a single trajectory point)
 
 simplified JointTrajectory creation
+
+TODO
+
+consistend names for processes, e.g., AfterPose, AfterPick, etc.

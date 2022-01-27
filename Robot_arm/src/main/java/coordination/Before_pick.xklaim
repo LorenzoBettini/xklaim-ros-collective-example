@@ -1,9 +1,6 @@
 package xklaim.coordination
 
 import coordination.JointTrajectory
-import coordination.JointTrajectoryPoint
-import java.util.Arrays
-import java.util.List
 import ros.Publisher
 import ros.RosBridge
 
@@ -17,21 +14,15 @@ proc Before_pick() {
 	// Initialize a publisher for the topic related to the control of the robot's arm
 	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
 
-	val jointTrajectoryPoints = new JointTrajectoryPoint();
-
 	// desired position for performing first action "before pick" 
-	jointTrajectoryPoints.positions = Arrays.asList(-3.14, -0.2169, -0.5822, 3.14, 1.66, -0.01412);
-	jointTrajectoryPoints.time_from_start.nsecs = 0;
-	jointTrajectoryPoints.time_from_start.secs = 120;
-	// JointTrajectory Initialization
-	val JointTrajectory before_pick = new JointTrajectory();
-	var List<JointTrajectoryPoint> list = Arrays.asList(jointTrajectoryPoints);
-	before_pick.points = list;
-	before_pick.joint_names = Arrays.asList("joint1", "joint2", "joint3", "joint4", "joint5", "joint6");
-	before_pick.header.stamp.secs = 0;
-	before_pick.header.stamp.nsecs = 0;
-	before_pick.header.frame_id = "";
+	val JointTrajectory beforePick = new JointTrajectory()
+		.positions(#[
+			-3.14, -0.2169, -0.5822, 3.14, 1.66, -0.01412
+		])
+		.jointNames(#[
+			"joint1", "joint2", "joint3", "joint4", "joint5", "joint6"
+		]);
 	// publishing the positions of the joints
-	pub.publish(before_pick);
+	pub.publish(beforePick);
 
 }
