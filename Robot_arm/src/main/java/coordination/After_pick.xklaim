@@ -8,8 +8,6 @@ import java.util.List
 import ros.Publisher
 import ros.RosBridge
 import ros.SubscriptionRequestMsg
-import ros.msgs.std_msgs.Header
-import ros.msgs.std_msgs.Time
 
 proc After_pick() {
 	val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
@@ -54,8 +52,9 @@ proc After_pick() {
 				// JointTrajectory Initialization
 				val JointTrajectory afterPick = new JointTrajectory()
 					.points(Arrays.asList(jointTrajectoryPoints))
-					.jointNames(Arrays.asList("joint1", "joint2", "joint3", "joint4", "joint5", "joint6"))
-					.header(new Header(0, new Time, ""));
+					.jointNames(
+						Arrays.asList("joint1", "joint2", "joint3", "joint4", "joint5", "joint6")
+					);
 				pub.publish(afterPick);
 				bridge.unsubscribe("/gripper_controller/state");
 			}

@@ -1,9 +1,10 @@
 package coordination;
 
 import ros.msgs.std_msgs.Header;
+import ros.msgs.std_msgs.Time;
 
 public class JointTrajectory {
-	public Header header = new Header();
+	public Header header = new Header(0, new Time(), "");
 	public String[] joint_names;
 	public JointTrajectoryPoint[] points = new JointTrajectoryPoint[1];
 

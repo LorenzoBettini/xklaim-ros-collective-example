@@ -13,8 +13,6 @@ import ros.Publisher;
 import ros.RosBridge;
 import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
-import ros.msgs.std_msgs.Header;
-import ros.msgs.std_msgs.Time;
 
 @SuppressWarnings("all")
 public class After_pick extends KlavaProcess {
@@ -48,10 +46,8 @@ public class After_pick extends KlavaProcess {
           ((double[])Conversions.unwrapArray(Arrays.<Double>asList(Double.valueOf((-3.1415)), Double.valueOf((-0.2862)), Double.valueOf((-0.5000)), Double.valueOf(3.1400), Double.valueOf(1.6613), Double.valueOf((-0.0142))), double.class)));
         Duration _duration = new Duration(120, 0);
         final JointTrajectoryPoint jointTrajectoryPoints = _positions.timeFromStart(_duration);
-        JointTrajectory _jointNames = new JointTrajectory().points(((JointTrajectoryPoint[])Conversions.unwrapArray(Arrays.<JointTrajectoryPoint>asList(jointTrajectoryPoints), JointTrajectoryPoint.class))).jointNames(((String[])Conversions.unwrapArray(Arrays.<String>asList("joint1", "joint2", "joint3", "joint4", "joint5", "joint6"), String.class)));
-        Time _time = new Time();
-        Header _header = new Header(0, _time, "");
-        final JointTrajectory afterPick = _jointNames.header(_header);
+        final JointTrajectory afterPick = new JointTrajectory().points(((JointTrajectoryPoint[])Conversions.unwrapArray(Arrays.<JointTrajectoryPoint>asList(jointTrajectoryPoints), JointTrajectoryPoint.class))).jointNames(
+          ((String[])Conversions.unwrapArray(Arrays.<String>asList("joint1", "joint2", "joint3", "joint4", "joint5", "joint6"), String.class)));
         pub.publish(afterPick);
         bridge.unsubscribe("/gripper_controller/state");
       }

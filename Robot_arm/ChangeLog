@@ -4,3 +4,5 @@ fluent interface for JointTrajectoryPoint
 fluent interface for JointTrajectory
 
 removed coordination.Header, since it's just the same as the one taken from Ros: ros.msgs.std_msgs.Header
+
+default new Header(0, new Time(), "") in JointTrajectory
