@@ -1,6 +1,5 @@
 package xklaim.coordination
 
-import coordination.Duration
 import coordination.JointTrajectory
 import coordination.JointTrajectoryPoint
 import java.util.Arrays
@@ -47,8 +46,9 @@ proc After_pick() {
 				// performing the referent position 
 				val jointTrajectoryPoints = new JointTrajectoryPoint()
 					.positions(
-						Arrays.asList(-3.1415, -0.2862, -0.5000, 3.1400, 1.6613, -0.0142))
-					.timeFromStart(new Duration(120, 0));
+						Arrays.asList(
+							-3.1415, -0.2862, -0.5000, 3.1400, 1.6613, -0.0142
+						));
 				// JointTrajectory Initialization
 				val JointTrajectory afterPick = new JointTrajectory()
 					.points(Arrays.asList(jointTrajectoryPoints))
