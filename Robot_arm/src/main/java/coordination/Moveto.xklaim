@@ -21,12 +21,10 @@ proc Moveto(Locality arm) {
 	in("goto1", var String frame_id, var Double x, var Double y, var Double w)@self
 
 	// Create a ROS message Twist, and populate it with the tuple data
-	val posesta = new PoseStamped();
-	// val twist = new Twist();
-	posesta.header.frame_id = frame_id;
-	posesta.pose.position.x = x;
-	posesta.pose.position.y = y;
-	posesta.pose.orientation.w = w;
+	val posesta = new PoseStamped()
+		.headerFrameId(frame_id)
+		.posePositionXY(x, y)
+		.poseOrientation(w);
 	pub.publish(posesta);
 	out("arrived", "arrived")@arm
 	val pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);

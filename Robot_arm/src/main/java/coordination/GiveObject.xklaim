@@ -32,11 +32,10 @@ proc GiveObject() {
 				// unit_box_2 is the name of the object
 				if (state.states.get(0).collision1_name == "unit_box_2::link::collision") {
 					in("give", var String frame_id, var Double x, var Double y, var Double w)@myself
-					val giveobject = new PoseStamped();
-					giveobject.header.frame_id = frame_id;
-					giveobject.pose.position.x = x;
-					giveobject.pose.position.y = y;
-					giveobject.pose.orientation.w = w;
+					val giveobject = new PoseStamped()
+						.headerFrameId(frame_id)
+						.posePositionXY(x, y)
+						.poseOrientation(w);
 					pub.publish(giveobject);
 					val pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
 					val twistMsg = new Twist();

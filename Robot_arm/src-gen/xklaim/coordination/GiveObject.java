@@ -51,11 +51,7 @@ public class GiveObject extends KlavaProcess {
           x = (Double) _Tuple_1.getItem(2);
           y = (Double) _Tuple_1.getItem(3);
           w = (Double) _Tuple_1.getItem(4);
-          final PoseStamped giveobject = new PoseStamped();
-          giveobject.header.frame_id = frame_id;
-          giveobject.pose.position.x = (x).doubleValue();
-          giveobject.pose.position.y = (y).doubleValue();
-          giveobject.pose.orientation.w = (w).doubleValue();
+          final PoseStamped giveobject = new PoseStamped().headerFrameId(frame_id).posePositionXY((x).doubleValue(), (y).doubleValue()).poseOrientation((w).doubleValue());
           pub.publish(giveobject);
           final Publisher pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
           final Twist twistMsg = new Twist();

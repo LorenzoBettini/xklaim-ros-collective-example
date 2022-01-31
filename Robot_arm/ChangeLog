@@ -68,9 +68,24 @@ val JointTrajectory afterPick = new JointTrajectory()
 		"joint1", "joint2", "joint3", "joint4", "joint5", "joint6"
 	]);
 
+Refactored PoseStamped
+
+val giveobject = new PoseStamped();
+giveobject.header.frame_id = frame_id;
+giveobject.pose.position.x = x;
+giveobject.pose.position.y = y;
+giveobject.pose.orientation.w = w;
+
+---->
+
+val giveobject = new PoseStamped()
+	.headerFrameId(frame_id)
+	.posePositionXY(x, y)
+	.poseOrientation(w);
+
 TODO
 
-consistend names for processes, e.g., AfterPose, AfterPick, etc.
+consistent names for processes, e.g., AfterPose, AfterPick, etc.
 
 is this default OK for all the cases?
 
