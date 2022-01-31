@@ -38,8 +38,6 @@ public class Moveto extends KlavaProcess {
     out(new Tuple(new Object[] {"arrived", "arrived"}), this.arm);
     final Publisher pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
     final Twist twistMsg = new Twist();
-    twistMsg.linear.x = 0.0;
-    twistMsg.angular.y = 0.0;
     pubvel.publish(twistMsg);
     out(new Tuple(new Object[] {"ready", "ready"}), this.arm);
   }

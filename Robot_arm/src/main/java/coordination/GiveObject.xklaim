@@ -39,8 +39,6 @@ proc GiveObject() {
 					pub.publish(giveobject);
 					val pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
 					val twistMsg = new Twist();
-					twistMsg.linear.x = 0.0;
-					twistMsg.angular.y = 0.0;
 					pubvel.publish(twistMsg);
 					println(String.format("Object is given"))
 				}

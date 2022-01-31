@@ -55,8 +55,6 @@ public class GiveObject extends KlavaProcess {
           pub.publish(giveobject);
           final Publisher pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
           final Twist twistMsg = new Twist();
-          twistMsg.linear.x = 0.0;
-          twistMsg.angular.y = 0.0;
           pubvel.publish(twistMsg);
           InputOutput.<String>println(String.format("Object is given"));
         }

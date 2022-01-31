@@ -83,6 +83,16 @@ val giveobject = new PoseStamped()
 	.posePositionXY(x, y)
 	.poseOrientation(w);
 
+For Twist
+
+These assignments are useless to me, since everything is initialized to 0.0, I seem to understand
+
+	val twistMsg = new Twist();
+	twistMsg.linear.x = 0.0;
+	twistMsg.angular.y = 0.0;
+
+so I simply removed the assignments to x and y
+
 TODO
 
 consistent names for processes, e.g., AfterPose, AfterPick, etc.
