@@ -11,17 +11,21 @@ import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
-public class Pick extends KlavaProcess {
+public class PickItem extends KlavaProcess {
   private RosBridge bridge;
   
-  public Pick(final RosBridge bridge) {
-    super("xklaim.coordination.Pick");
+  public PickItem(final RosBridge bridge) {
+    super("xklaim.coordination.PickItem");
     this.bridge = bridge;
   }
   
   @Override
   public void executeProcess() {
     final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", this.bridge);
+    final JointTrajectory firstMovement = new JointTrajectory().positions(
+      new double[] { (-3.14), (-0.2169), (-0.5822), 3.14, 1.66, (-0.01412) }).jointNames(
+      new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
+    pub.publish(firstMovement);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode actual = data.get("msg").get("actual").get("positions");
       final List<Double> desire = Arrays.<Double>asList(Double.valueOf((-3.14)), Double.valueOf((-0.2169)), Double.valueOf((-0.5822)), Double.valueOf(3.14), Double.valueOf(1.66), Double.valueOf((-0.01412)));

@@ -8,18 +8,7 @@ net RobotColl physical "localhost:9999" {
 		val bridge = new RosBridge()
 		bridge.connect(rosbridgeWebsocketURI, true)
 		
-		
-		/////// Non mi e' chiara la differenza fra Before_Pick e Pick, forse la prima è solo 
-		/////// una rotazione e la seconda piega il braccio??? 
-		/////// se e' cosi' allora ha senso tenere separate le due azioni, in vista della estensione dello scenario  
-		/////// perche' la rotate cambia mentre le altre azioni restano le stesse. 
-		
-		/////// Before_pick -> Rotate??? MoveTowardsItem
-		executeNodeProcess(new Before_pick(bridge))
-		/////// Pick -> PickItem
-		executeNodeProcess(new Pick(bridge))
-		
-		
+		executeNodeProcess(new PickItem(bridge))
 		
 		/////// Grasp-> GripItem???
 		executeNodeProcess(new Grasp(bridge))

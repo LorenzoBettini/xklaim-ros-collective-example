@@ -2,7 +2,6 @@ package xklaim.coordination;
 
 import coordination.JointTrajectory;
 import klava.topology.KlavaProcess;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import ros.Publisher;
 import ros.RosBridge;
 
@@ -21,8 +20,6 @@ public class Before_pick extends KlavaProcess {
     final JointTrajectory beforePick = new JointTrajectory().positions(
       new double[] { (-3.14), (-0.2169), (-0.5822), 3.14, 1.66, (-0.01412) }).jointNames(
       new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
-    InputOutput.<String>println(String.format("INIZIO MOVIMENTO"));
     pub.publish(beforePick);
-    InputOutput.<String>println(String.format("FINE MOVIMENTO"));
   }
 }

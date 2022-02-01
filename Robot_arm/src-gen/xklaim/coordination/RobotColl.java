@@ -23,10 +23,8 @@ public class RobotColl extends LogicalNet {
           final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
           final RosBridge bridge = new RosBridge();
           bridge.connect(rosbridgeWebsocketURI, true);
-          Before_pick _before_pick = new Before_pick(bridge);
-          this.executeNodeProcess(_before_pick);
-          Pick _pick = new Pick(bridge);
-          this.executeNodeProcess(_pick);
+          PickItem _pickItem = new PickItem(bridge);
+          this.executeNodeProcess(_pickItem);
           Grasp _grasp = new Grasp(bridge);
           this.executeNodeProcess(_grasp);
           After_pick _after_pick = new After_pick(bridge);
