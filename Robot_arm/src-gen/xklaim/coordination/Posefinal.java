@@ -45,7 +45,7 @@ public class Posefinal extends KlavaProcess {
       final double norm = Math.sqrt(sum);
       final double tol = 0.008;
       if ((norm <= tol)) {
-        out(new Tuple(new Object[] {"goto1", "world", (-0.24), (-2.67), 1.0}), this.robot2);
+        out(new Tuple(new Object[] {"goto1", "world", (-0.25), (-2.67), 1.0}), this.robot2);
         String arrived = null;
         Tuple _Tuple = new Tuple(new Object[] {"arrived", String.class});
         in(_Tuple, myself);

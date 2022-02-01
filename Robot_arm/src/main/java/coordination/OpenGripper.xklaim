@@ -44,6 +44,9 @@ proc OpenGripper(Locality robot2) {
 				bridge.unsubscribe("/arm_controller/state");
 				println(String.format("I am opening"))
 				bridge.unsubscribe("/gripper_controller/state");
+				
+				
+				////////// non lo informa trippo presto?????? non e' meglio aspettare? perche' due field????
 				out("open", "gripper")@robot2
 			}
 		]

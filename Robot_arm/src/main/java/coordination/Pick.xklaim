@@ -35,7 +35,18 @@ proc Pick() {
 			val tol = 0.000001;
 
 			if (sum <= tol) {
-				// if the robot finish the first action, should perform the second action "pick" 
+				// if the robot finish the first action, should perform the second action "pick"
+				
+				
+				/////// userei il coordinamento con tuple qui: secondo me i controlli qui sopra li dovrebbe 
+				/////// fare Before_Pick, perché chi fa l'azione dice quando ha finito. Lo dice pubblicando
+				/////// una tupla localmente. Quindi Pick non fa altro che aspettare con una in che Before_Pick
+				/////// abbia terminato e poi pubblica l'azione. 
+				/////// Il vantaggio e' quello di poter disaccoppiare meglio il codice delle varie azioni, 
+				/////// consentendo il riuso di questi processi.
+				/////// ATTENZIONE: in caso tutti i processi andrebbero modificati in questo modo
+				
+				 
 				val JointTrajectory pick = new JointTrajectory()
 					.positions(#[
 						-3.1415, -0.9975, -0.4970, 3.1400, 1.6613, -0.0142
