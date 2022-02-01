@@ -4,12 +4,8 @@ import coordination.JointTrajectory
 import ros.Publisher
 import ros.RosBridge
 
-proc Before_pick() {
-	val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
-
-	// Create the bridge and connect it to the ROS bridge
-	val bridge = new RosBridge()
-	bridge.connect(rosbridgeWebsocketURI, true)
+proc Before_pick(RosBridge bridge) {
+	
 
 	// Initialize a publisher for the topic related to the control of the robot's arm
 	/////// forse vale la pena essere piu' specifici, con questo publisher si gestiscono solo i movimenti non la pinza	

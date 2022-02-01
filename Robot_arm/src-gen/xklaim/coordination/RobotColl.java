@@ -7,6 +7,7 @@ import klava.topology.KlavaNodeCoordinator;
 import klava.topology.LogicalNet;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.mikado.imc.common.IMCException;
+import ros.RosBridge;
 
 @SuppressWarnings("all")
 public class RobotColl extends LogicalNet {
@@ -19,9 +20,12 @@ public class RobotColl extends LogicalNet {
       @Override
       public void executeProcess() {
         try {
-          Before_pick _before_pick = new Before_pick();
+          final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
+          final RosBridge bridge = new RosBridge();
+          bridge.connect(rosbridgeWebsocketURI, true);
+          Before_pick _before_pick = new Before_pick(bridge);
           this.executeNodeProcess(_before_pick);
-          Pick _pick = new Pick();
+          Pick _pick = new Pick(bridge);
           this.executeNodeProcess(_pick);
           Grasp _grasp = new Grasp();
           this.executeNodeProcess(_grasp);

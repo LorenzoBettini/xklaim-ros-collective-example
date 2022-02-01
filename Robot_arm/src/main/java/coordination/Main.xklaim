@@ -1,8 +1,12 @@
 package xklaim.coordination 
-
+import ros.RosBridge
 
 net RobotColl physical "localhost:9999" {
 	node Arm {
+		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
+		// Create the bridge and connect it to the ROS bridge
+		val bridge = new RosBridge()
+		bridge.connect(rosbridgeWebsocketURI, true)
 		
 		/////// si potrebbe creare qui il bridge, magari con un metodo per nascondere qualche info
 		/////// val bridge = Init()
@@ -14,9 +18,9 @@ net RobotColl physical "localhost:9999" {
 		/////// perche' la rotate cambia mentre le altre azioni restano le stesse. 
 		
 		/////// Before_pick -> Rotate??? MoveTowardsItem
-		executeNodeProcess(new Before_pick())
+		executeNodeProcess(new Before_pick(bridge))
 		/////// Pick -> PickItem
-		executeNodeProcess(new Pick())
+		executeNodeProcess(new Pick(bridge))
 		
 		
 		

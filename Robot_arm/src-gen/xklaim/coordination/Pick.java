@@ -12,16 +12,16 @@ import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
 public class Pick extends KlavaProcess {
-  public Pick() {
+  private RosBridge bridge;
+  
+  public Pick(final RosBridge bridge) {
     super("xklaim.coordination.Pick");
+    this.bridge = bridge;
   }
   
   @Override
   public void executeProcess() {
-    final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
-    final RosBridge bridge = new RosBridge();
-    bridge.connect(rosbridgeWebsocketURI, true);
-    final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
+    final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", this.bridge);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode actual = data.get("msg").get("actual").get("positions");
       final List<Double> desire = Arrays.<Double>asList(Double.valueOf((-3.14)), Double.valueOf((-0.2169)), Double.valueOf((-0.5822)), Double.valueOf(3.14), Double.valueOf(1.66), Double.valueOf((-0.01412)));
@@ -40,10 +40,10 @@ public class Pick extends KlavaProcess {
           new double[] { (-3.1415), (-0.9975), (-0.4970), 3.1400, 1.6613, (-0.0142) }).jointNames(
           new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
         pub.publish(pick);
-        bridge.unsubscribe("/arm_controller/state");
+        this.bridge.unsubscribe("/arm_controller/state");
       }
     };
-    bridge.subscribe(
+    this.bridge.subscribe(
       SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").setThrottleRate(Integer.valueOf(1)).setQueueLength(Integer.valueOf(1)), _function);
   }
 }
