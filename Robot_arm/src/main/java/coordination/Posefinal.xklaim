@@ -6,13 +6,9 @@ import ros.Publisher
 import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
-proc Posefinal(Locality robot2) {
+proc Posefinal(RosBridge bridge,Locality robot2) {
 	val myself = self
-	val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
-	// Create the bridge and connect it to the ROS bridge
-	val bridge = new RosBridge()
-	bridge.connect(rosbridgeWebsocketURI, true)
-
+	
 	// Initialize a publisher for the topic related to the control of the robot's arm
 	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
 	bridge.subscribe(

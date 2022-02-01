@@ -27,17 +27,17 @@ public class RobotColl extends LogicalNet {
           this.executeNodeProcess(_before_pick);
           Pick _pick = new Pick(bridge);
           this.executeNodeProcess(_pick);
-          Grasp _grasp = new Grasp();
+          Grasp _grasp = new Grasp(bridge);
           this.executeNodeProcess(_grasp);
-          After_pick _after_pick = new After_pick();
+          After_pick _after_pick = new After_pick(bridge);
           this.executeNodeProcess(_after_pick);
-          Pose _pose = new Pose();
+          Pose _pose = new Pose(bridge);
           this.executeNodeProcess(_pose);
-          Posefinal _posefinal = new Posefinal(RobotColl.Robot2);
+          Posefinal _posefinal = new Posefinal(bridge, RobotColl.Robot2);
           this.executeNodeProcess(_posefinal);
-          OpenGripper _openGripper = new OpenGripper(RobotColl.Robot2);
+          OpenGripper _openGripper = new OpenGripper(bridge, RobotColl.Robot2);
           this.executeNodeProcess(_openGripper);
-          Afterpose _afterpose = new Afterpose(RobotColl.Robot2);
+          Afterpose _afterpose = new Afterpose(bridge, RobotColl.Robot2);
           this.executeNodeProcess(_afterpose);
         } catch (Throwable _e) {
           throw Exceptions.sneakyThrow(_e);

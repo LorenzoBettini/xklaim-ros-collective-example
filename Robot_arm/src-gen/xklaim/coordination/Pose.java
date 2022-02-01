@@ -13,16 +13,16 @@ import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
 public class Pose extends KlavaProcess {
-  public Pose() {
+  private RosBridge bridge;
+  
+  public Pose(final RosBridge bridge) {
     super("xklaim.coordination.Pose");
+    this.bridge = bridge;
   }
   
   @Override
   public void executeProcess() {
-    final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
-    final RosBridge bridge = new RosBridge();
-    bridge.connect(rosbridgeWebsocketURI, true);
-    final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
+    final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", this.bridge);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode actual = data.get("msg").get("actual").get("positions");
       final List<Double> desire = Collections.<Double>unmodifiableList(CollectionLiterals.<Double>newArrayList(Double.valueOf((-3.1417061706596003)), Double.valueOf((-0.28618833559546175)), Double.valueOf((-0.49998813405672404)), Double.valueOf(3.1396898889426783), Double.valueOf(1.6612913247682046), Double.valueOf((-0.0142))));
@@ -42,10 +42,10 @@ public class Pose extends KlavaProcess {
           new double[] { (-0.9546), (-0.20), (-0.7241), 3.1400, 1.6613, (-0.0142) }).jointNames(
           new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
         pub.publish(pose);
-        bridge.unsubscribe("/arm_controller/state");
+        this.bridge.unsubscribe("/arm_controller/state");
       }
     };
-    bridge.subscribe(
+    this.bridge.subscribe(
       SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").setThrottleRate(Integer.valueOf(1)).setQueueLength(Integer.valueOf(1)), _function);
   }
 }

@@ -3,14 +3,11 @@ import ros.RosBridge
 
 net RobotColl physical "localhost:9999" {
 	node Arm {
-		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
 		// Create the bridge and connect it to the ROS bridge
+		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090" 
 		val bridge = new RosBridge()
 		bridge.connect(rosbridgeWebsocketURI, true)
 		
-		/////// si potrebbe creare qui il bridge, magari con un metodo per nascondere qualche info
-		/////// val bridge = Init()
-		/////// si potrebbe mettere l'uri come parametro di Init oppure leggere queste info da file .properties ??? 
 		
 		/////// Non mi e' chiara la differenza fra Before_Pick e Pick, forse la prima è solo 
 		/////// una rotazione e la seconda piega il braccio??? 
@@ -25,24 +22,24 @@ net RobotColl physical "localhost:9999" {
 		
 		
 		/////// Grasp-> GripItem???
-		executeNodeProcess(new Grasp())
+		executeNodeProcess(new Grasp(bridge))
 		
 		/////// After_pick -> LiftItem ??? oltre a tirare su ruota?
-		executeNodeProcess(new After_pick())
+		executeNodeProcess(new After_pick(bridge))
 		
 		/////// Capire cosa fa Pose(); ruota e basta?
-		executeNodeProcess(new Pose())
+		executeNodeProcess(new Pose(bridge))
 		
 		////// Pose -> Put down
 		
 		/////// Pose final chiama l'altro robot e inizia a posare: facciamo un processo solo per questa chiamata? 
-		executeNodeProcess(new Posefinal(Robot2))
+		executeNodeProcess(new Posefinal(bridge,Robot2))
 		
 		//// OpenGripper -> ReleaseItem
-		executeNodeProcess(new OpenGripper(Robot2))
+		executeNodeProcess(new OpenGripper(bridge,Robot2))
 		
 		/// capire bene cosa fa....
-		executeNodeProcess(new Afterpose(Robot2))
+		executeNodeProcess(new Afterpose(bridge,Robot2))
 	}
 	node Robot2 {
 		executeNodeProcess(new Moveto(Arm))

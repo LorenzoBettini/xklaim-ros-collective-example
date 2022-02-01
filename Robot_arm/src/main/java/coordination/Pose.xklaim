@@ -5,10 +5,7 @@ import ros.Publisher
 import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
-proc Pose() {
-	val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
-	val bridge = new RosBridge()
-	bridge.connect(rosbridgeWebsocketURI, true)
+proc Pose(RosBridge bridge) {
 	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
 	bridge.subscribe(
 		SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").

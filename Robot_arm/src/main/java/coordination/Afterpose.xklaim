@@ -6,12 +6,9 @@ import ros.Publisher
 import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
-proc Afterpose(Locality robot2) {
-	val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
+proc Afterpose(RosBridge bridge,Locality robot2) {
 	val myself = self
-	// Create the bridge and connect it to the ROS bridge
-	val bridge = new RosBridge()
-	bridge.connect(rosbridgeWebsocketURI, true)
+	
 	in("ready", var String ready)@myself
 	println(String.format("%s to take the object", ready));
 	// Initialize a publisher for the topic related to the control of the robot's arm
