@@ -10,7 +10,7 @@ net RobotColl physical "localhost:9999" {
 		
 		executeNodeProcess(new PickItem(bridge))
 		
-		/////// Grasp-> GripItem???
+			
 		executeNodeProcess(new Grasp(bridge))
 		
 		/////// After_pick -> LiftItem ??? oltre a tirare su ruota?

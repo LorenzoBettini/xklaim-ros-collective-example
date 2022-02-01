@@ -40,10 +40,11 @@ public class PickItem extends KlavaProcess {
       }
       final double tol = 0.000001;
       if ((sum <= tol)) {
+        final Publisher pub2 = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", this.bridge);
         final JointTrajectory pick = new JointTrajectory().positions(
           new double[] { (-3.1415), (-0.9975), (-0.4970), 3.1400, 1.6613, (-0.0142) }).jointNames(
           new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
-        pub.publish(pick);
+        pub2.publish(pick);
         this.bridge.unsubscribe("/arm_controller/state");
       }
     };

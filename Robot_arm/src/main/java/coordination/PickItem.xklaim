@@ -51,6 +51,7 @@ proc PickItem(RosBridge bridge) {
 				/////// consentendo il riuso di questi processi.
 				/////// ATTENZIONE: in caso tutti i processi andrebbero modificati in questo modo
 				
+				val pub2 = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge); 
 				 
 				val JointTrajectory pick = new JointTrajectory()
 					.positions(#[
@@ -59,7 +60,7 @@ proc PickItem(RosBridge bridge) {
 					.jointNames(#[
 						"joint1", "joint2", "joint3", "joint4", "joint5", "joint6"
 					]);
-				pub.publish(pick);
+				pub2.publish(pick);
 				bridge.unsubscribe("/arm_controller/state");
 			}
 		]
