@@ -27,7 +27,7 @@ proc Posefinal(Locality robot2) {
 			val norm = Math.sqrt(sum);
 			val tol = 0.008;
 			if (norm <= tol) {
-				out("goto1", "world",-0.24, -2.67, 1.0)@robot2
+				out("goto1", "world",-0.25, -2.67, 1.0)@robot2
 				// here when the robot send message arrived, the arm should pose the object.
 				in("arrived", var String arrived)@myself
 				println(String.format("I am: %s,", arrived))
