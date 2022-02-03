@@ -3,32 +3,29 @@ import ros.RosBridge
 
 net RobotColl physical "localhost:9999" {
 	node Arm {
-		// Create the bridge and connect it to the ROS bridge
 		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090" 
-		val bridge = new RosBridge()
-		bridge.connect(rosbridgeWebsocketURI, true)
 		
-		executeNodeProcess(new PickItem(bridge))
+		executeNodeProcess(new PickItem(rosbridgeWebsocketURI))
 		
 			
-		executeNodeProcess(new Grasp(bridge))
+		executeNodeProcess(new Grasp(rosbridgeWebsocketURI))
 		
 		/////// After_pick -> LiftItem ??? oltre a tirare su ruota?
-		executeNodeProcess(new After_pick(bridge))
+		executeNodeProcess(new After_pick(rosbridgeWebsocketURI))
 		
 		/////// Capire cosa fa Pose(); ruota e basta?
-		executeNodeProcess(new Pose(bridge))
+		executeNodeProcess(new Pose(rosbridgeWebsocketURI))
 		
 		////// Pose -> Put down
 		
 		/////// Pose final chiama l'altro robot e inizia a posare: facciamo un processo solo per questa chiamata? 
-		executeNodeProcess(new Posefinal(bridge,Robot2))
+		executeNodeProcess(new Posefinal(rosbridgeWebsocketURI,Robot2))
 		
 		//// OpenGripper -> ReleaseItem
-		executeNodeProcess(new OpenGripper(bridge,Robot2))
+		executeNodeProcess(new OpenGripper(rosbridgeWebsocketURI,Robot2))
 		
 		/// capire bene cosa fa....
-		executeNodeProcess(new Afterpose(bridge,Robot2))
+		executeNodeProcess(new Afterpose(rosbridgeWebsocketURI,Robot2))
 	}
 	node Robot2 {
 		executeNodeProcess(new Moveto(Arm))

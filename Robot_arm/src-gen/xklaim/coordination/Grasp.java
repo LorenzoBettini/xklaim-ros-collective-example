@@ -12,16 +12,18 @@ import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
 public class Grasp extends KlavaProcess {
-  private RosBridge bridge;
+  private String rosbridgeWebsocketURI;
   
-  public Grasp(final RosBridge bridge) {
+  public Grasp(final String rosbridgeWebsocketURI) {
     super("xklaim.coordination.Grasp");
-    this.bridge = bridge;
+    this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
   }
   
   @Override
   public void executeProcess() {
-    final Publisher pub = new Publisher("/gripper_controller/command", "trajectory_msgs/JointTrajectory", this.bridge);
+    final RosBridge bridge = new RosBridge();
+    bridge.connect(this.rosbridgeWebsocketURI, true);
+    final Publisher pub = new Publisher("/gripper_controller/command", "trajectory_msgs/JointTrajectory", bridge);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode actual = data.get("msg").get("actual").get("positions");
       final List<Double> desire = Arrays.<Double>asList(Double.valueOf((-3.1415)), Double.valueOf((-0.9975)), Double.valueOf((-0.4970)), Double.valueOf(3.1400), Double.valueOf(1.6613), Double.valueOf((-0.0142)));
@@ -41,10 +43,10 @@ public class Grasp extends KlavaProcess {
           new double[] { 0.019927757424255833, (-0.010904802339570573) }).jointNames(
           new String[] { "f_joint1", "f_joint2" });
         pub.publish(grasp);
-        this.bridge.unsubscribe("/arm_controller/state");
+        bridge.unsubscribe("/arm_controller/state");
       }
     };
-    this.bridge.subscribe(
+    bridge.subscribe(
       SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").setThrottleRate(Integer.valueOf(1)).setQueueLength(Integer.valueOf(1)), _function);
   }
 }

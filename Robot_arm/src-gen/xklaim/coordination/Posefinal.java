@@ -16,20 +16,22 @@ import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
 public class Posefinal extends KlavaProcess {
-  private RosBridge bridge;
+  private String rosbridgeWebsocketURI;
   
   private Locality robot2;
   
-  public Posefinal(final RosBridge bridge, final Locality robot2) {
+  public Posefinal(final String rosbridgeWebsocketURI, final Locality robot2) {
     super("xklaim.coordination.Posefinal");
-    this.bridge = bridge;
+    this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
     this.robot2 = robot2;
   }
   
   @Override
   public void executeProcess() {
     final Locality myself = this.self;
-    final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", this.bridge);
+    final RosBridge bridge = new RosBridge();
+    bridge.connect(this.rosbridgeWebsocketURI, true);
+    final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode actual = data.get("msg").get("actual").get("positions");
       final List<Double> desire = Collections.<Double>unmodifiableList(CollectionLiterals.<Double>newArrayList(Double.valueOf((-0.9546)), Double.valueOf((-0.20)), Double.valueOf((-0.7241)), Double.valueOf(3.1400), Double.valueOf(1.6613), Double.valueOf((-0.0142))));
@@ -56,10 +58,10 @@ public class Posefinal extends KlavaProcess {
           new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
         pub.publish(posefinal);
         InputOutput.<String>println(String.format("Iam posing"));
-        this.bridge.unsubscribe("/arm_controller/state");
+        bridge.unsubscribe("/arm_controller/state");
       }
     };
-    this.bridge.subscribe(
+    bridge.subscribe(
       SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").setThrottleRate(Integer.valueOf(1)).setQueueLength(Integer.valueOf(1)), _function);
   }
 }

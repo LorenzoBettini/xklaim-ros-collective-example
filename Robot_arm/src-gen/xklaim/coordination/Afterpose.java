@@ -16,25 +16,27 @@ import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
 public class Afterpose extends KlavaProcess {
-  private RosBridge bridge;
+  private String rosbridgeWebsocketURI;
   
   private Locality robot2;
   
-  public Afterpose(final RosBridge bridge, final Locality robot2) {
+  public Afterpose(final String rosbridgeWebsocketURI, final Locality robot2) {
     super("xklaim.coordination.Afterpose");
-    this.bridge = bridge;
+    this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
     this.robot2 = robot2;
   }
   
   @Override
   public void executeProcess() {
     final Locality myself = this.self;
+    final RosBridge bridge = new RosBridge();
+    bridge.connect(this.rosbridgeWebsocketURI, true);
     String ready = null;
     Tuple _Tuple = new Tuple(new Object[] {"ready", String.class});
     in(_Tuple, myself);
     ready = (String) _Tuple.getItem(1);
     InputOutput.<String>println(String.format("%s to take the object", ready));
-    final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", this.bridge);
+    final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode error = data.get("msg").get("actual").get("positions");
       final List<Double> desire = Collections.<Double>unmodifiableList(CollectionLiterals.<Double>newArrayList(Double.valueOf(0.000), Double.valueOf(0.000)));
@@ -57,7 +59,7 @@ public class Afterpose extends KlavaProcess {
         out(new Tuple(new Object[] {"give", "world", (-6.0), (-5.0), 1.0}), this.robot2);
       }
     };
-    this.bridge.subscribe(
+    bridge.subscribe(
       SubscriptionRequestMsg.generate("/gripper_controller/state").setType(
         "control_msgs/JointTrajectoryControllerState").setThrottleRate(Integer.valueOf(1)).setQueueLength(Integer.valueOf(1)), _function);
   }

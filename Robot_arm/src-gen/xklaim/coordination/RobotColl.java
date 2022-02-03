@@ -7,7 +7,6 @@ import klava.topology.KlavaNodeCoordinator;
 import klava.topology.LogicalNet;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.mikado.imc.common.IMCException;
-import ros.RosBridge;
 
 @SuppressWarnings("all")
 public class RobotColl extends LogicalNet {
@@ -21,21 +20,19 @@ public class RobotColl extends LogicalNet {
       public void executeProcess() {
         try {
           final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
-          final RosBridge bridge = new RosBridge();
-          bridge.connect(rosbridgeWebsocketURI, true);
-          PickItem _pickItem = new PickItem(bridge);
+          PickItem _pickItem = new PickItem(rosbridgeWebsocketURI);
           this.executeNodeProcess(_pickItem);
-          Grasp _grasp = new Grasp(bridge);
+          Grasp _grasp = new Grasp(rosbridgeWebsocketURI);
           this.executeNodeProcess(_grasp);
-          After_pick _after_pick = new After_pick(bridge);
+          After_pick _after_pick = new After_pick(rosbridgeWebsocketURI);
           this.executeNodeProcess(_after_pick);
-          Pose _pose = new Pose(bridge);
+          Pose _pose = new Pose(rosbridgeWebsocketURI);
           this.executeNodeProcess(_pose);
-          Posefinal _posefinal = new Posefinal(bridge, RobotColl.Robot2);
+          Posefinal _posefinal = new Posefinal(rosbridgeWebsocketURI, RobotColl.Robot2);
           this.executeNodeProcess(_posefinal);
-          OpenGripper _openGripper = new OpenGripper(bridge, RobotColl.Robot2);
+          OpenGripper _openGripper = new OpenGripper(rosbridgeWebsocketURI, RobotColl.Robot2);
           this.executeNodeProcess(_openGripper);
-          Afterpose _afterpose = new Afterpose(bridge, RobotColl.Robot2);
+          Afterpose _afterpose = new Afterpose(rosbridgeWebsocketURI, RobotColl.Robot2);
           this.executeNodeProcess(_afterpose);
         } catch (Throwable _e) {
           throw Exceptions.sneakyThrow(_e);

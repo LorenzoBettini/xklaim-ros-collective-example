@@ -15,19 +15,21 @@ import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
 public class OpenGripper extends KlavaProcess {
-  private RosBridge bridge;
+  private String rosbridgeWebsocketURI;
   
   private Locality robot2;
   
-  public OpenGripper(final RosBridge bridge, final Locality robot2) {
+  public OpenGripper(final String rosbridgeWebsocketURI, final Locality robot2) {
     super("xklaim.coordination.OpenGripper");
-    this.bridge = bridge;
+    this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
     this.robot2 = robot2;
   }
   
   @Override
   public void executeProcess() {
-    final Publisher pub = new Publisher("/gripper_controller/command", "trajectory_msgs/JointTrajectory", this.bridge);
+    final RosBridge bridge = new RosBridge();
+    bridge.connect(this.rosbridgeWebsocketURI, true);
+    final Publisher pub = new Publisher("/gripper_controller/command", "trajectory_msgs/JointTrajectory", bridge);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode actual = data.get("msg").get("actual").get("positions");
       final List<Double> desire = Arrays.<Double>asList(Double.valueOf((-0.9546)), Double.valueOf((-0.0097)), Double.valueOf((-0.9513)), Double.valueOf(3.1400), Double.valueOf(1.7749), Double.valueOf((-0.0142)));
@@ -47,13 +49,13 @@ public class OpenGripper extends KlavaProcess {
           new double[] { 0.000, 0.0000 }).jointNames(
           new String[] { "f_joint1", "f_joint2" });
         pub.publish(open);
-        this.bridge.unsubscribe("/arm_controller/state");
+        bridge.unsubscribe("/arm_controller/state");
         InputOutput.<String>println(String.format("I am opening"));
-        this.bridge.unsubscribe("/gripper_controller/state");
+        bridge.unsubscribe("/gripper_controller/state");
         out(new Tuple(new Object[] {"open", "gripper"}), this.robot2);
       }
     };
-    this.bridge.subscribe(
+    bridge.subscribe(
       SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").setThrottleRate(Integer.valueOf(1)).setQueueLength(Integer.valueOf(1)), _function);
   }
 }

@@ -12,16 +12,18 @@ import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
 public class PickItem extends KlavaProcess {
-  private RosBridge bridge;
+  private String rosbridgeWebsocketURI;
   
-  public PickItem(final RosBridge bridge) {
+  public PickItem(final String rosbridgeWebsocketURI) {
     super("xklaim.coordination.PickItem");
-    this.bridge = bridge;
+    this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
   }
   
   @Override
   public void executeProcess() {
-    final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", this.bridge);
+    final RosBridge bridge = new RosBridge();
+    bridge.connect(this.rosbridgeWebsocketURI, true);
+    final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
     final JointTrajectory firstMovement = new JointTrajectory().positions(
       new double[] { (-3.14), (-0.2169), (-0.5822), 3.14, 1.66, (-0.01412) }).jointNames(
       new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
@@ -40,15 +42,14 @@ public class PickItem extends KlavaProcess {
       }
       final double tol = 0.000001;
       if ((sum <= tol)) {
-        final Publisher pub2 = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", this.bridge);
+        final Publisher pub2 = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
         final JointTrajectory pick = new JointTrajectory().positions(
           new double[] { (-3.1415), (-0.9975), (-0.4970), 3.1400, 1.6613, (-0.0142) }).jointNames(
           new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
         pub2.publish(pick);
-        this.bridge.unsubscribe("/arm_controller/state");
       }
     };
-    this.bridge.subscribe(
+    bridge.subscribe(
       SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").setThrottleRate(Integer.valueOf(1)).setQueueLength(Integer.valueOf(1)), _function);
   }
 }
