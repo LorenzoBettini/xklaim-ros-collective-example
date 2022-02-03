@@ -32,22 +32,22 @@ public class PickItem extends KlavaProcess {
     pub.publish(firstMovement);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode actual = data.get("msg").get("actual").get("positions");
-      double sum = 0.0;
+      double delta = 0.0;
+      final double tolerance = 0.000001;
       for (int i = 0; (i < trajectoryPositions.size()); i++) {
-        double _sum = sum;
+        double _delta = delta;
         double _asDouble = actual.get(i).asDouble();
         Double _get = trajectoryPositions.get(i);
         double _minus = (_asDouble - (_get).doubleValue());
         double _abs = Math.abs(_minus);
-        sum = (_sum + _abs);
+        delta = (_delta + _abs);
       }
-      final double tol = 0.000001;
-      if ((sum <= tol)) {
-        final Publisher pub2 = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
-        final JointTrajectory pick = new JointTrajectory().positions(
-          new double[] { (-3.1415), (-0.9975), (-0.4970), 3.1400, 1.6613, (-0.0142) }).jointNames(
+      if ((delta <= tolerance)) {
+        final List<Double> secondTrajectoryPositions = Collections.<Double>unmodifiableList(CollectionLiterals.<Double>newArrayList(Double.valueOf((-3.1415)), Double.valueOf((-0.9975)), Double.valueOf((-0.4970)), Double.valueOf(3.1400), Double.valueOf(1.6613), Double.valueOf((-0.0142))));
+        final JointTrajectory secondMovement = new JointTrajectory().positions(((double[])Conversions.unwrapArray(secondTrajectoryPositions, double.class))).jointNames(
           new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
-        pub2.publish(pick);
+        pub.publish(secondMovement);
+        bridge.unsubscribe("/arm_controller/state");
       }
     };
     bridge.subscribe(
