@@ -15,6 +15,20 @@ proc Grasp(String rosbridgeWebsocketURI) {
 		// Initialize a publisher for the topic related to the control of the robot's wheels
 	val pub = new Publisher("/gripper_controller/command", "trajectory_msgs/JointTrajectory", bridge);
 
+	val JointTrajectory grasp = new JointTrajectory()
+					.positions(#[
+						0.019927757424255833, -0.010904802339570573
+					])
+					.jointNames(#[
+						"f_joint1", "f_joint2"
+					]);
+
+	in("pickMovementsCompleted")@self
+	pub.publish(grasp);
+	
+	
+	
+	/* 
 	// subscribe to get the actual status of the arm 
 	bridge.subscribe(
 		SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").
@@ -34,6 +48,8 @@ proc Grasp(String rosbridgeWebsocketURI) {
 
 			if (norm <= tol) {
 				// if the robot finish the second action, should perform the third action "grasp" using only gripper not the arm 
+
+
 				val JointTrajectory grasp = new JointTrajectory()
 					.positions(#[
 						0.019927757424255833, -0.010904802339570573
@@ -46,4 +62,5 @@ proc Grasp(String rosbridgeWebsocketURI) {
 			}
 		]
 	)
+	*/
 }
