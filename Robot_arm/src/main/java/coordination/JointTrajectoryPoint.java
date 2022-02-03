@@ -18,6 +18,11 @@ public class JointTrajectoryPoint {
 		this.positions = positions;
 		return this;
 	}
+	
+	public JointTrajectoryPoint velocities(double[] velocities) {
+		this.velocities = velocities;
+		return this;
+	}
 
 	public JointTrajectoryPoint timeFromStart(Duration time_from_start) {
 		this.time_from_start = time_from_start;
