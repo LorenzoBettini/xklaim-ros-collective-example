@@ -12,11 +12,11 @@ import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
-public class After_pick extends KlavaProcess {
+public class GetUp extends KlavaProcess {
   private String rosbridgeWebsocketURI;
   
-  public After_pick(final String rosbridgeWebsocketURI) {
-    super("xklaim.coordination.After_pick");
+  public GetUp(final String rosbridgeWebsocketURI) {
+    super("xklaim.coordination.GetUp");
     this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
   }
   

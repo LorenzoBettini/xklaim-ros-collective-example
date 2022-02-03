@@ -15,11 +15,11 @@ import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
-public class PickItem extends KlavaProcess {
+public class GetDown extends KlavaProcess {
   private String rosbridgeWebsocketURI;
   
-  public PickItem(final String rosbridgeWebsocketURI) {
-    super("xklaim.coordination.PickItem");
+  public GetDown(final String rosbridgeWebsocketURI) {
+    super("xklaim.coordination.GetDown");
     this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
   }
   
@@ -63,7 +63,7 @@ public class PickItem extends KlavaProcess {
         pub.publish(secondMovement);
       }
       if ((norm <= tolerance2)) {
-        out(new Tuple(new Object[] {"pickMovementsCompleted"}), local);
+        out(new Tuple(new Object[] {"getDownMovementsCompleted"}), local);
         bridge.unsubscribe("/arm_controller/state");
       }
     };

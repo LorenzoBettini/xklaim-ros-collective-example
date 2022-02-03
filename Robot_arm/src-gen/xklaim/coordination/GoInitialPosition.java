@@ -15,13 +15,13 @@ import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
-public class Afterpose extends KlavaProcess {
+public class GoInitialPosition extends KlavaProcess {
   private String rosbridgeWebsocketURI;
   
   private Locality robot2;
   
-  public Afterpose(final String rosbridgeWebsocketURI, final Locality robot2) {
-    super("xklaim.coordination.Afterpose");
+  public GoInitialPosition(final String rosbridgeWebsocketURI, final Locality robot2) {
+    super("xklaim.coordination.GoInitialPosition");
     this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
     this.robot2 = robot2;
   }

@@ -20,20 +20,20 @@ public class RobotColl extends LogicalNet {
       public void executeProcess() {
         try {
           final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
-          PickItem _pickItem = new PickItem(rosbridgeWebsocketURI);
-          this.executeNodeProcess(_pickItem);
-          Grasp _grasp = new Grasp(rosbridgeWebsocketURI);
-          this.executeNodeProcess(_grasp);
-          After_pick _after_pick = new After_pick(rosbridgeWebsocketURI);
-          this.executeNodeProcess(_after_pick);
-          Pose _pose = new Pose(rosbridgeWebsocketURI);
-          this.executeNodeProcess(_pose);
-          Posefinal _posefinal = new Posefinal(rosbridgeWebsocketURI, RobotColl.Robot2);
-          this.executeNodeProcess(_posefinal);
-          OpenGripper _openGripper = new OpenGripper(rosbridgeWebsocketURI, RobotColl.Robot2);
-          this.executeNodeProcess(_openGripper);
-          Afterpose _afterpose = new Afterpose(rosbridgeWebsocketURI, RobotColl.Robot2);
-          this.executeNodeProcess(_afterpose);
+          GetDown _getDown = new GetDown(rosbridgeWebsocketURI);
+          this.executeNodeProcess(_getDown);
+          Grip _grip = new Grip(rosbridgeWebsocketURI);
+          this.executeNodeProcess(_grip);
+          GetUp _getUp = new GetUp(rosbridgeWebsocketURI);
+          this.executeNodeProcess(_getUp);
+          Rotate _rotate = new Rotate(rosbridgeWebsocketURI);
+          this.executeNodeProcess(_rotate);
+          Lay _lay = new Lay(rosbridgeWebsocketURI, RobotColl.Robot2);
+          this.executeNodeProcess(_lay);
+          Release _release = new Release(rosbridgeWebsocketURI, RobotColl.Robot2);
+          this.executeNodeProcess(_release);
+          GoInitialPosition _goInitialPosition = new GoInitialPosition(rosbridgeWebsocketURI, RobotColl.Robot2);
+          this.executeNodeProcess(_goInitialPosition);
         } catch (Throwable _e) {
           throw Exceptions.sneakyThrow(_e);
         }

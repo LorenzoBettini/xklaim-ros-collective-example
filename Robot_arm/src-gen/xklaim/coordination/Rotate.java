@@ -12,11 +12,11 @@ import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
-public class Pose extends KlavaProcess {
+public class Rotate extends KlavaProcess {
   private String rosbridgeWebsocketURI;
   
-  public Pose(final String rosbridgeWebsocketURI) {
-    super("xklaim.coordination.Pose");
+  public Rotate(final String rosbridgeWebsocketURI) {
+    super("xklaim.coordination.Rotate");
     this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
   }
   

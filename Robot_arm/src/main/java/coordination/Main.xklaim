@@ -5,30 +5,38 @@ net RobotColl physical "localhost:9999" {
 	node Arm {
 		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090" 
 		
-		executeNodeProcess(new PickItem(rosbridgeWebsocketURI))
+		// IDEA: provare a rimpiazzare i processi di movimento (es. getDown, GetUp, ecc.) 
+		// con un solo processo Move(...alcuni parametri...)
 		
+		executeNodeProcess(new GetDown(rosbridgeWebsocketURI))
 			
-		executeNodeProcess(new Grasp(rosbridgeWebsocketURI))
+		executeNodeProcess(new Grip(rosbridgeWebsocketURI))
 		
-		/////// After_pick -> LiftItem ??? oltre a tirare su ruota?
-		executeNodeProcess(new After_pick(rosbridgeWebsocketURI))
+		executeNodeProcess(new GetUp(rosbridgeWebsocketURI))
 		
-		/////// Capire cosa fa Pose(); ruota e basta?
-		executeNodeProcess(new Pose(rosbridgeWebsocketURI))
+		executeNodeProcess(new Rotate(rosbridgeWebsocketURI))
 		
-		////// Pose -> Put down
+		// TODO: call the delivery robot: out("goto1", "world",-0.25, -2.67, 1.0)@robot2
 		
-		/////// Pose final chiama l'altro robot e inizia a posare: facciamo un processo solo per questa chiamata? 
-		executeNodeProcess(new Posefinal(rosbridgeWebsocketURI,Robot2))
+	 
+		executeNodeProcess(new Lay(rosbridgeWebsocketURI,Robot2))
+		//  in("arrived", var String arrived)@myself
 		
-		//// OpenGripper -> ReleaseItem
-		executeNodeProcess(new OpenGripper(rosbridgeWebsocketURI,Robot2))
+		executeNodeProcess(new Release(rosbridgeWebsocketURI,Robot2))
+				
+		// TODO: provide the destination to the delivery robot: out("give", "world", -6.0, -5.0, 1.0)@robot2
 		
-		/// capire bene cosa fa....
-		executeNodeProcess(new Afterpose(rosbridgeWebsocketURI,Robot2))
+		executeNodeProcess(new GoInitialPosition(rosbridgeWebsocketURI,Robot2))
+		
 	}
 	node Robot2 {
 		executeNodeProcess(new Moveto(Arm))
+		// in("goto1", var String frame_id, var Double x, var Double y, var Double w)@self
+		// out("arrived", "arrived")@arm
+		
 		executeNodeProcess(new GiveObject())
+		// in("give", var String frame_id, var Double x, var Double y, var Double w)@myself
+		 
+		
 	}
 }

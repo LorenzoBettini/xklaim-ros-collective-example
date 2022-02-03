@@ -7,7 +7,7 @@ import ros.Publisher
 import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
-proc Grasp(String rosbridgeWebsocketURI) {
+proc Grip(String rosbridgeWebsocketURI) {
 	// Create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
@@ -23,7 +23,7 @@ proc Grasp(String rosbridgeWebsocketURI) {
 						"f_joint1", "f_joint2"
 					]);
 
-	in("pickMovementsCompleted")@self
+	in("getDownMovementsCompleted")@self
 	pub.publish(grasp);
 	
 	

@@ -8,7 +8,7 @@ import ros.Publisher
 import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
-proc OpenGripper(String rosbridgeWebsocketURI,Locality robot2) {
+proc Release(String rosbridgeWebsocketURI,Locality robot2) {
 	// Create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)

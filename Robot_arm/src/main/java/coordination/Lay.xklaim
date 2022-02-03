@@ -6,7 +6,7 @@ import ros.Publisher
 import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
-proc Posefinal(String rosbridgeWebsocketURI,Locality robot2) {
+proc Lay(String rosbridgeWebsocketURI,Locality robot2) {
 	val myself = self
 	
 	// Create the bridge and connect it to the ROS bridge
