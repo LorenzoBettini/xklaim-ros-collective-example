@@ -8,40 +8,37 @@ import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
 proc PickItem(String rosbridgeWebsocketURI) {	
-	// Create the bridge and connect it to the ROS bridge
+	// create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
 	
-	// Initialize a publisher for the topic related to the control of the movements of the robot's arm
-	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
+	// initialize a publisher for the topic related to the control of the movements of the arm robot 
+	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge)
 
-	// desired position for performing the first movement of the arm 
+	// set joint positions for performing the first movement of the arm
+	val trajectoryPositions = #[-3.14, -0.2169, -0.5822, 3.14, 1.66, -0.01412]
 	val JointTrajectory firstMovement = new JointTrajectory()
-		.positions(#[
-			-3.14, -0.2169, -0.5822, 3.14, 1.66, -0.01412
-		])
+		.positions(trajectoryPositions)
 		.jointNames(#[
 			"joint1", "joint2", "joint3", "joint4", "joint5", "joint6"
 		]);
-	// publishing the positions of the joints
-	pub.publish(firstMovement);
+	// publishing the joint trajectory
+	pub.publish(firstMovement)
 	
 	// subscribe to get the actual status of the arm 
 	bridge.subscribe(
 		SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").
 			setThrottleRate(1).setQueueLength(1), [ data, stringRep |
-			// Extract the position joints from the Json message	
-			val actual = data.get("msg").get("actual").get("positions");
-			// this is a list of the desire positions of the first action
-			val List<Double> desire = Arrays.asList(-3.14, -0.2169, -0.5822, 3.14, 1.66, -0.01412);
-
-			var sum = 0.0;
-			for (var i = 0; i < 6; i = i + 1) {
-				sum = sum + Math.abs(actual.get(i).asDouble() - desire.get(i));
+			// extract the position joints from the arm's status	
+			val actual = data.get("msg").get("actual").get("positions")
+		
+			var sum = 0.0
+			for (var i = 0; i < trajectoryPositions.size; i++) {
+				sum += Math.abs(actual.get(i).asDouble() - trajectoryPositions.get(i))
 			}
 			// this is the error to  measure the completeness of the first action "before pick" 	
 			// val norm = Math.sqrt(sum);		
-			val tol = 0.000001;
+			val tol = 0.000001
 
 			if (sum <= tol) {
 				// if the robot finish the first action, should perform the second action "pick"
@@ -55,7 +52,7 @@ proc PickItem(String rosbridgeWebsocketURI) {
 				/////// consentendo il riuso di questi processi.
 				/////// ATTENZIONE: in caso tutti i processi andrebbero modificati in questo modo
 				
-				val pub2 = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge); 
+				val pub2 = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge) 
 				 
 				val JointTrajectory pick = new JointTrajectory()
 					.positions(#[
@@ -64,7 +61,7 @@ proc PickItem(String rosbridgeWebsocketURI) {
 					.jointNames(#[
 						"joint1", "joint2", "joint3", "joint4", "joint5", "joint6"
 					]);
-				pub2.publish(pick);
+				pub2.publish(pick)
 				
 				
 			}

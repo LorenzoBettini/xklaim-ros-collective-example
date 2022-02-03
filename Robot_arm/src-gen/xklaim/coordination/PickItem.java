@@ -2,9 +2,11 @@ package xklaim.coordination;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import coordination.JointTrajectory;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import klava.topology.KlavaProcess;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import ros.Publisher;
 import ros.RosBridge;
 import ros.RosListenDelegate;
@@ -24,21 +26,20 @@ public class PickItem extends KlavaProcess {
     final RosBridge bridge = new RosBridge();
     bridge.connect(this.rosbridgeWebsocketURI, true);
     final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
-    final JointTrajectory firstMovement = new JointTrajectory().positions(
-      new double[] { (-3.14), (-0.2169), (-0.5822), 3.14, 1.66, (-0.01412) }).jointNames(
+    final List<Double> trajectoryPositions = Collections.<Double>unmodifiableList(CollectionLiterals.<Double>newArrayList(Double.valueOf((-3.14)), Double.valueOf((-0.2169)), Double.valueOf((-0.5822)), Double.valueOf(3.14), Double.valueOf(1.66), Double.valueOf((-0.01412))));
+    final JointTrajectory firstMovement = new JointTrajectory().positions(((double[])Conversions.unwrapArray(trajectoryPositions, double.class))).jointNames(
       new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
     pub.publish(firstMovement);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode actual = data.get("msg").get("actual").get("positions");
-      final List<Double> desire = Arrays.<Double>asList(Double.valueOf((-3.14)), Double.valueOf((-0.2169)), Double.valueOf((-0.5822)), Double.valueOf(3.14), Double.valueOf(1.66), Double.valueOf((-0.01412)));
       double sum = 0.0;
-      for (int i = 0; (i < 6); i = (i + 1)) {
+      for (int i = 0; (i < trajectoryPositions.size()); i++) {
+        double _sum = sum;
         double _asDouble = actual.get(i).asDouble();
-        Double _get = desire.get(i);
+        Double _get = trajectoryPositions.get(i);
         double _minus = (_asDouble - (_get).doubleValue());
         double _abs = Math.abs(_minus);
-        double _plus = (sum + _abs);
-        sum = _plus;
+        sum = (_sum + _abs);
       }
       final double tol = 0.000001;
       if ((sum <= tol)) {
