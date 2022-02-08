@@ -13,22 +13,20 @@ net RobotColl physical "localhost:9999" {
 		
 		executeNodeProcess(new GetUp(rosbridgeWebsocketURI))
 		
-		executeNodeProcess(new Rotate(rosbridgeWebsocketURI))
-		
-		// TODO: call the delivery robot: out("goto1", "world",-0.25, -2.67, 1.0)@robot2
-		
+		executeNodeProcess(new Rotate(rosbridgeWebsocketURI,DeliveryRobot))
+		// out("goto1", "world",-0.25, -2.67, 1.0)@robot2
 	 
-		executeNodeProcess(new Lay(rosbridgeWebsocketURI,Robot2))
+		executeNodeProcess(new Lay(rosbridgeWebsocketURI,DeliveryRobot))
 		//  in("arrived", var String arrived)@myself
 		
-		executeNodeProcess(new Release(rosbridgeWebsocketURI,Robot2))
+		executeNodeProcess(new Release(rosbridgeWebsocketURI,DeliveryRobot))
 				
 		// TODO: provide the destination to the delivery robot: out("give", "world", -6.0, -5.0, 1.0)@robot2
 		
-		executeNodeProcess(new GoInitialPosition(rosbridgeWebsocketURI,Robot2))
+		executeNodeProcess(new GoInitialPosition(rosbridgeWebsocketURI,DeliveryRobot))
 		
 	}
-	node Robot2 {
+	node DeliveryRobot {
 		executeNodeProcess(new Moveto(Arm))
 		// in("goto1", var String frame_id, var Double x, var Double y, var Double w)@self
 		// out("arrived", "arrived")@arm

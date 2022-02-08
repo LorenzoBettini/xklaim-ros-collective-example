@@ -3,8 +3,11 @@ package xklaim.coordination
 import coordination.JointTrajectory
 import ros.Publisher
 import ros.RosBridge
+import ros.SubscriptionRequestMsg
 
-proc Rotate(String rosbridgeWebsocketURI) {
+proc Rotate(String rosbridgeWebsocketURI,Locality deliveryRobot) {
+	val local = self
+
 	// create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
@@ -28,4 +31,35 @@ proc Rotate(String rosbridgeWebsocketURI) {
 
 	// publish the trajectory to rotate the arm	 
 	pub.publish(rotateTrajectory)
+
+	// subscribe to the topic providing the actual status of the arm 
+	bridge.subscribe(
+		SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").
+			setThrottleRate(1).setQueueLength(1),
+		[ data, stringRep |
+			// extract the actual joint positions from the gripper's status	
+			val actual = data.get("msg").get("actual").get("positions")
+
+			// calculate the delta between the actual joint positions and the destination positions
+			// to measure the completeness of the gripper movement
+			var delta = 0.0
+			val tolerance = 0.008
+			for (var i = 0; i < jointPositions.size; i++) {
+				delta += Math.pow(actual.get(i).asDouble() - jointPositions.get(i), 2.0)
+			}
+			val norm = Math.sqrt(delta)
+
+			if (norm <= tolerance) {
+				// the arm has completed the rotation movement
+				// activate the get up process
+				out("rotationCompleted")@local
+
+				// call the delivery robot
+				out("goto1", "world",-0.25, -2.67, 1.0)@deliveryRobot
+
+				// unsubscribe from the arm state topic
+				bridge.unsubscribe("/arm_controller/state")
+			}
+		]
+	)
 }
