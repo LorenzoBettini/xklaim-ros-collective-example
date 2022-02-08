@@ -1,66 +1,60 @@
 package xklaim.coordination
 
 import coordination.JointTrajectory
-import java.util.Arrays
-import java.util.List
 import ros.Publisher
 import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
 proc Grip(String rosbridgeWebsocketURI) {
-	// Create the bridge and connect it to the ROS bridge
+	val local = self;
+
+	// create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
-	
-		// Initialize a publisher for the topic related to the control of the robot's wheels
+
+	// initialize a publisher for the topic related to the control of the arm's gripper
 	val pub = new Publisher("/gripper_controller/command", "trajectory_msgs/JointTrajectory", bridge);
 
-	val JointTrajectory grasp = new JointTrajectory()
-					.positions(#[
-						0.019927757424255833, -0.010904802339570573
-					])
-					.jointNames(#[
-						"f_joint1", "f_joint2"
-					]);
+	// set joint positions for performing the first movement of the arm
+	val gripperPositions = #[0.019927757424255833, -0.010904802339570573]
+	val JointTrajectory grip = new JointTrajectory().positions(gripperPositions).jointNames(#[
+		"f_joint1",
+		"f_joint2"
+	]);
 
+	// wait for the completion of the GetDown movement
 	in("getDownMovementsCompleted")@self
-	pub.publish(grasp);
-	
-	
-	
-	/* 
-	// subscribe to get the actual status of the arm 
+
+	// publish the grip trajectory to activate the gripper
+	pub.publish(grip);
+
+	// subscribe to the topic providing the actual status of the gripper 
 	bridge.subscribe(
-		SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").
-			setThrottleRate(1).setQueueLength(1), [ data, stringRep |
+		SubscriptionRequestMsg.generate("/gripper_controller/state").setType(
+			"control_msgs/JointTrajectoryControllerState").setThrottleRate(1).setQueueLength(1),
+		[ data, stringRep |
+			// extract the actual joint positions from the gripper's status	
 			val actual = data.get("msg").get("actual").get("positions");
-			// this is a list of the desire positions of the second action "pick"
-			val List<Double> desire = Arrays.asList(-3.1415, -0.9975, -0.4970, 3.1400, 1.6613, -0.0142);
 
-			var sum = 0.0;
-			for (var i = 0; i <= 5; i = i + 1) {
-				sum = sum + Math.pow(actual.get(i).asDouble() - desire.get(i), 2.0);
+			// calculate the delta between the actual joint positions and the destination positions
+			// to measure the completeness of the gripper movements
+			var delta = 0.0
+			val tolerance = 0.007
+			for (var i = 0; i < gripperPositions.size; i++) {
+				delta += Math.pow(actual.get(i).asDouble() - gripperPositions.get(i), 2.0)
+			}
+			val norm = Math.sqrt(delta);
+
+			if (norm <= tolerance) {
+				// the gripper has completed the grip movement
+				// activate the get up process
+				out("gripCompleted")@local
+
+				// unsubscribe from the gripper state topic
+				bridge.unsubscribe("/gripper_controller/state");
 			}
 
-			// this is the error to  measure the completness of the second action "pick" 	
-			val norm = Math.sqrt(sum);
-			val tol = 0.00001;
-
-			if (norm <= tol) {
-				// if the robot finish the second action, should perform the third action "grasp" using only gripper not the arm 
-
-
-				val JointTrajectory grasp = new JointTrajectory()
-					.positions(#[
-						0.019927757424255833, -0.010904802339570573
-					])
-					.jointNames(#[
-						"f_joint1", "f_joint2"
-					]);
-				pub.publish(grasp);
-				bridge.unsubscribe("/arm_controller/state");
-			}
 		]
 	)
-	*/
+
 }

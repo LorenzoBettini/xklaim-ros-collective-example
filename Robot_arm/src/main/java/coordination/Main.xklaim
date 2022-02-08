@@ -1,5 +1,4 @@
-package xklaim.coordination 
-import ros.RosBridge
+package xklaim.coordination
 
 net RobotColl physical "localhost:9999" {
 	node Arm {

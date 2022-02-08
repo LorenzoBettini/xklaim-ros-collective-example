@@ -32,7 +32,7 @@ proc GetDown(String rosbridgeWebsocketURI) {
 		]);
 						
 		
-	// publishing the first movement trajectory
+	// publish the first movement trajectory
 	pub.publish(firstMovement)
 	
 	// subscribe to the topic providing the actual status of the arm 
@@ -58,14 +58,14 @@ proc GetDown(String rosbridgeWebsocketURI) {
 			if (delta1 <= tolerance1) {
 				// the arm has completed the first movement
 				
-				// publishing the second movement trajectory
+				// publish the second movement trajectory
 				pub.publish(secondMovement)
 			}
 			
 			if (norm <= tolerance2) {
 				// the arm has completed the second movement
 				
-				// activate the Grasp process
+				// activate the grip Process
 				out("getDownMovementsCompleted")@local
 				
 				// unsubscribe from the arm state topic
