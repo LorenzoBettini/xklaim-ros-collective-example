@@ -3,24 +3,26 @@ package xklaim.coordination
 import coordination.JointTrajectory
 import ros.Publisher
 import ros.RosBridge
-import ros.SubscriptionRequestMsg
 
 proc Rotate(String rosbridgeWebsocketURI) {
 	// create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
-	
+
 	// initialize a publisher for the topic related to the control of the arm movements
-	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
-	
+	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge)
+
 	// set joint positions for performing the get up movement of the arm
 	val jointPositions = #[-0.9546, -0.20, -0.7241, 3.1400, 1.6613, -0.0142]
-	val JointTrajectory rotateTrajectory = new JointTrajectory()
-					.positions(jointPositions)
-					.jointNames(#[
-						"joint1", "joint2", "joint3", "joint4", "joint5", "joint6"
-					])
-					
+	val JointTrajectory rotateTrajectory = new JointTrajectory().positions(jointPositions).jointNames(#[
+		"joint1",
+		"joint2",
+		"joint3",
+		"joint4",
+		"joint5",
+		"joint6"
+	])
+
 	// wait for the completion of the get up movement
 	in("getUpCompleted")@self
 

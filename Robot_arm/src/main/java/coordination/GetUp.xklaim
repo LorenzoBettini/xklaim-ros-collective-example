@@ -30,7 +30,7 @@ proc GetUp(String rosbridgeWebsocketURI) {
 	in("gripCompleted")@self
 
 	// publish the trajectory to move up the arm	 
-	pub.publish(getUpJointTrajectory);
+	pub.publish(getUpJointTrajectory)
 
 	// subscribe to the topic providing the actual status of the gripper 
 	bridge.subscribe(
