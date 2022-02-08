@@ -6,34 +6,24 @@ import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
 proc Rotate(String rosbridgeWebsocketURI) {
-	// Create the bridge and connect it to the ROS bridge
+	// create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
 	
+	// initialize a publisher for the topic related to the control of the arm movements
 	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
-	bridge.subscribe(
-		SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").
-			setThrottleRate(1).setQueueLength(1), [ data, stringRep |
-			val actual = data.get("msg").get("actual").get("positions");
-			val desire = #[-3.1417061706596003, -0.28618833559546175, -0.49998813405672404,
-				3.1396898889426783, 1.6612913247682046, -0.0142];
-			var sum = 0.0;
-			for (var i = 0; i < 6; i = i + 1) {
-				sum += Math.pow(actual.get(i).asDouble() - desire.get(i), 2.0);
-			}
-			val norm = Math.sqrt(sum);
-			val tol = 0.008;
-			if (norm <= tol) {
-				val JointTrajectory pose = new JointTrajectory()
-					.positions(#[
-						-0.9546, -0.20, -0.7241, 3.1400, 1.6613, -0.0142
-					])
+	
+	// set joint positions for performing the get up movement of the arm
+	val jointPositions = #[-0.9546, -0.20, -0.7241, 3.1400, 1.6613, -0.0142]
+	val JointTrajectory rotateTrajectory = new JointTrajectory()
+					.positions(jointPositions)
 					.jointNames(#[
 						"joint1", "joint2", "joint3", "joint4", "joint5", "joint6"
-					]);
-				pub.publish(pose);
-				bridge.unsubscribe("/arm_controller/state");
-			}
-		]
-	)
+					])
+					
+	// wait for the completion of the get up movement
+	in("getUpCompleted")@self
+
+	// publish the trajectory to rotate the arm	 
+	pub.publish(rotateTrajectory)
 }
