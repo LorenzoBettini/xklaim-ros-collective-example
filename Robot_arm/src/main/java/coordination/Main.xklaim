@@ -26,12 +26,8 @@ net RobotColl physical "localhost:9999" {
 	node DeliveryRobot {
 		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
 		
-		executeNodeProcess(new Moveto(rosbridgeWebsocketURI,Arm))
-		// out("arrived", "arrived")@arm
+		eval(new MovetoArm(rosbridgeWebsocketURI,Arm))@self
 		
-		executeNodeProcess(new GiveObject(rosbridgeWebsocketURI))
-		// in("give", var String frame_id, var Double x, var Double y, var Double w)@myself
-		 
-		
+		eval(new DeliverItem(rosbridgeWebsocketURI))@self	 		
 	}
 }

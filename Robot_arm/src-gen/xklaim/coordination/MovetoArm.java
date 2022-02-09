@@ -9,13 +9,13 @@ import ros.RosBridge;
 import ros.msgs.geometry_msgs.Twist;
 
 @SuppressWarnings("all")
-public class Moveto extends KlavaProcess {
+public class MovetoArm extends KlavaProcess {
   private String rosbridgeWebsocketURI;
   
   private Locality arm;
   
-  public Moveto(final String rosbridgeWebsocketURI, final Locality arm) {
-    super("xklaim.coordination.Moveto");
+  public MovetoArm(final String rosbridgeWebsocketURI, final Locality arm) {
+    super("xklaim.coordination.MovetoArm");
     this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
     this.arm = arm;
   }
@@ -33,8 +33,8 @@ public class Moveto extends KlavaProcess {
     x = (Double) _Tuple.getItem(1);
     y = (Double) _Tuple.getItem(2);
     w = (Double) _Tuple.getItem(3);
-    final PoseStamped posesta = new PoseStamped().headerFrameId("world").posePositionXY((x).doubleValue(), (y).doubleValue()).poseOrientation((w).doubleValue());
-    pub.publish(posesta);
+    final PoseStamped destination = new PoseStamped().headerFrameId("world").posePositionXY((x).doubleValue(), (y).doubleValue()).poseOrientation((w).doubleValue());
+    pub.publish(destination);
     final Publisher pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
     final Twist twistMsg = new Twist();
     pubvel.publish(twistMsg);

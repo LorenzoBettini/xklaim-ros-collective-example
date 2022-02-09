@@ -6,7 +6,6 @@ import klava.Tuple;
 import klava.topology.ClientNode;
 import klava.topology.KlavaNodeCoordinator;
 import klava.topology.LogicalNet;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.mikado.imc.common.IMCException;
 
 @SuppressWarnings("all")
@@ -53,15 +52,11 @@ public class RobotColl extends LogicalNet {
     private static class DeliveryRobotProcess extends KlavaNodeCoordinator {
       @Override
       public void executeProcess() {
-        try {
-          final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
-          Moveto _moveto = new Moveto(rosbridgeWebsocketURI, RobotColl.Arm);
-          this.executeNodeProcess(_moveto);
-          GiveObject _giveObject = new GiveObject(rosbridgeWebsocketURI);
-          this.executeNodeProcess(_giveObject);
-        } catch (Throwable _e) {
-          throw Exceptions.sneakyThrow(_e);
-        }
+        final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
+        MovetoArm _movetoArm = new MovetoArm(rosbridgeWebsocketURI, RobotColl.Arm);
+        eval(_movetoArm, this.self);
+        DeliverItem _deliverItem = new DeliverItem(rosbridgeWebsocketURI);
+        eval(_deliverItem, this.self);
       }
     }
     
