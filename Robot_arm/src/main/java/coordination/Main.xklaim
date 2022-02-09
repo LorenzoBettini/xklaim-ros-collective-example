@@ -4,9 +4,6 @@ net RobotColl physical "localhost:9999" {
 	node Arm {
 		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090" 
 		
-		// IDEA: provare a rimpiazzare i processi di movimento (es. getDown, GetUp, ecc.) 
-		// con un solo processo Move(...alcuni parametri...)
-		
 		executeNodeProcess(new GetDown(rosbridgeWebsocketURI))
 			
 		executeNodeProcess(new Grip(rosbridgeWebsocketURI))

@@ -4,7 +4,6 @@ import coordination.JointTrajectory
 import klava.Locality
 import ros.Publisher
 import ros.RosBridge
-import ros.SubscriptionRequestMsg
 
 proc Lay(String rosbridgeWebsocketURI,Locality robot2) {
 	val myself = self
