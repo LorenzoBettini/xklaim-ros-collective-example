@@ -10,16 +10,13 @@ net RobotColl physical "localhost:9999" {
 		
 		eval(new GetUp(rosbridgeWebsocketURI))@self
 		
-		executeNodeProcess(new Rotate(rosbridgeWebsocketURI,DeliveryRobot))
+		eval(new Rotate(rosbridgeWebsocketURI,DeliveryRobot))@self
 	 
-		executeNodeProcess(new Lay(rosbridgeWebsocketURI,DeliveryRobot))
-		//  in("arrived", var String arrived)@myself
+		eval(new Lay(rosbridgeWebsocketURI,DeliveryRobot))@self
 		
-		executeNodeProcess(new Release(rosbridgeWebsocketURI,DeliveryRobot))
-				
-		// TODO: provide the destination to the delivery robot: out("give", "world", -6.0, -5.0, 1.0)@robot2
-		
-		executeNodeProcess(new GoInitialPosition(rosbridgeWebsocketURI,DeliveryRobot))
+		eval(new Release(rosbridgeWebsocketURI,DeliveryRobot))@self
+						
+		eval(new GoToInitialPosition(rosbridgeWebsocketURI,DeliveryRobot))@self
 		
 	}
 	node DeliveryRobot {

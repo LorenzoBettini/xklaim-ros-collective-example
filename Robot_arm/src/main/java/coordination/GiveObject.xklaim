@@ -16,8 +16,8 @@ proc GiveObject(String rosbridgeWebsocketURI) {
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
 	
-	in("open", var String gripper)@local
-	println(String.format("The %s is opening", gripper));
+	in("gripperOpening")@self
+	
 	
 	// Initialize a publisher for the topic related to the control of the robot's arm
 	val pub = new Publisher("/robot1/move_base_simple/goal", "geometry_msgs/PoseStamped", bridge);
@@ -32,9 +32,9 @@ proc GiveObject(String rosbridgeWebsocketURI) {
 				// print(state.states.get(0).collision1_name)
 				// unit_box_2 is the name of the object
 				if (state.states.get(0).collision1_name == "unit_box_2::link::collision") {
-					in("give", var String frame_id, var Double x, var Double y, var Double w)@local
+					in("destination", var Double x, var Double y, var Double w)@local
 					val giveobject = new PoseStamped()
-						.headerFrameId(frame_id)
+						.headerFrameId("world")
 						.posePositionXY(x, y)
 						.poseOrientation(w);
 					pub.publish(giveobject);

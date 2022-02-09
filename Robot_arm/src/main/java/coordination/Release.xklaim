@@ -1,54 +1,63 @@
 package xklaim.coordination
 
 import coordination.JointTrajectory
-import java.util.Arrays
-import java.util.List
 import klava.Locality
 import ros.Publisher
 import ros.RosBridge
 import ros.SubscriptionRequestMsg
 
-proc Release(String rosbridgeWebsocketURI,Locality robot2) {
+proc Release(String rosbridgeWebsocketURI,Locality deliveryRobot) {
 	val local = self
-	
-	// Create the bridge and connect it to the ROS bridge
+
+	// create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
-	
-	// Initialize a publisher for the topic related to the control of the robot's wheels
+
+	in("layCompleted")@self
+
+	// initialize a publisher for the topic related to the control of the gripper
 	val pub = new Publisher("/gripper_controller/command", "trajectory_msgs/JointTrajectory", bridge);
 
+	val jointPositions = #[
+		0.0,
+		0.0
+	]
+	val JointTrajectory openGripperTrajectory = new JointTrajectory().positions(jointPositions).jointNames(#[
+		"f_joint1",
+		"f_joint2"
+	]);
+	pub.publish(openGripperTrajectory)
+
+	// inform the delivery robot that the gripper is opened
+	out("gripperOpening")@deliveryRobot
+
+	// subscribe to the topic providing the actual status of the gripper 
 	bridge.subscribe(
-		SubscriptionRequestMsg.generate("/arm_controller/state").setType("control_msgs/JointTrajectoryControllerState").
-			setThrottleRate(1).setQueueLength(1), [ data, stringRep |
+		SubscriptionRequestMsg.generate("/gripper_controller/state").setType(
+			"control_msgs/JointTrajectoryControllerState").setThrottleRate(1).setQueueLength(1),
+		[ data, stringRep |
+			val actual = data.get("msg").get("actual").get("positions")
 
-			val actual = data.get("msg").get("actual").get("positions");
-			val List<Double> desire = Arrays.asList(-0.9546, -0.0097, -0.9513, 3.1400, 1.7749, -0.0142);
-
-			var sum = 0.0;
-			for (var i = 0; i < 6; i = i + 1) {
-				// sum = sum + Math.pow(error.get(i).asDouble()-desire.get(i),2.0);
-				sum = sum + Math.pow(actual.get(i).asDouble() - desire.get(i), 2.0);
+			var delta = 0.0
+			val tolerance = 0.0009
+			for (var i = 0; i < jointPositions.size; i = i + 1) {
+				delta += Math.pow(actual.get(i).asDouble() - jointPositions.get(i), 2.0)
 			}
-			val norm = Math.sqrt(sum);
-			val tol = 0.001;
-			if (norm <= tol) {
-				val JointTrajectory open = new JointTrajectory()
-					.positions(#[
-						0.000, 0.0000
-					])
-					.jointNames(#[
-						"f_joint1", "f_joint2"
-					]);
-				pub.publish(open);
-				bridge.unsubscribe("/arm_controller/state");
-				println(String.format("I am opening"))
-				bridge.unsubscribe("/gripper_controller/state");
+			val norm = Math.sqrt(delta)
+
+			if (norm <= tolerance) {
+				// the gripper is completely opened
+				// activate the GoToInitialPosition process
+				out("releaseCompleted")@local
 				
-				
-				////////// non lo informa trippo presto?????? non e' meglio aspettare? perche' due field????
-				out("open", "gripper")@robot2
-				out("opened")@local
+				// communicate the destination position to the delivery robot
+				val x = -6.0
+				val y = -5.0
+				val w = 1.0  
+				out("destination", x, y, w)@deliveryRobot
+
+				// unsubscribe from the griper state topic
+				bridge.unsubscribe("/gripper_controller/state")
 			}
 		]
 	)

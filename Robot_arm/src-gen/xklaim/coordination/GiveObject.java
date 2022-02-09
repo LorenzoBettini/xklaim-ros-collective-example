@@ -30,11 +30,7 @@ public class GiveObject extends KlavaProcess {
     final Locality local = this.self;
     final RosBridge bridge = new RosBridge();
     bridge.connect(this.rosbridgeWebsocketURI, true);
-    String gripper = null;
-    Tuple _Tuple = new Tuple(new Object[] {"open", String.class});
-    in(_Tuple, local);
-    gripper = (String) _Tuple.getItem(1);
-    InputOutput.<String>println(String.format("The %s is opening", gripper));
+    in(new Tuple(new Object[] {"gripperOpening"}), this.self);
     final Publisher pub = new Publisher("/robot1/move_base_simple/goal", "geometry_msgs/PoseStamped", bridge);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       ObjectMapper mapper = new ObjectMapper();
@@ -43,17 +39,15 @@ public class GiveObject extends KlavaProcess {
         ContactsState state = mapper.<ContactsState>treeToValue(rosMsgNode, ContactsState.class);
         boolean _equals = Objects.equal((state.states[0]).collision1_name, "unit_box_2::link::collision");
         if (_equals) {
-          String frame_id = null;
           Double x = null;
           Double y = null;
           Double w = null;
-          Tuple _Tuple_1 = new Tuple(new Object[] {"give", String.class, Double.class, Double.class, Double.class});
-          in(_Tuple_1, local);
-          frame_id = (String) _Tuple_1.getItem(1);
-          x = (Double) _Tuple_1.getItem(2);
-          y = (Double) _Tuple_1.getItem(3);
-          w = (Double) _Tuple_1.getItem(4);
-          final PoseStamped giveobject = new PoseStamped().headerFrameId(frame_id).posePositionXY((x).doubleValue(), (y).doubleValue()).poseOrientation((w).doubleValue());
+          Tuple _Tuple = new Tuple(new Object[] {"destination", Double.class, Double.class, Double.class});
+          in(_Tuple, local);
+          x = (Double) _Tuple.getItem(1);
+          y = (Double) _Tuple.getItem(2);
+          w = (Double) _Tuple.getItem(3);
+          final PoseStamped giveobject = new PoseStamped().headerFrameId("world").posePositionXY((x).doubleValue(), (y).doubleValue()).poseOrientation((w).doubleValue());
           pub.publish(giveobject);
           final Publisher pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
           final Twist twistMsg = new Twist();

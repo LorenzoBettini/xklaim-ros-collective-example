@@ -1,0 +1,40 @@
+package xklaim.coordination
+
+import coordination.JointTrajectory
+import klava.Locality
+import ros.Publisher
+import ros.RosBridge
+
+proc GoToInitialPosition(String rosbridgeWebsocketURI,Locality robot2) {
+	val myself = self
+
+	// Create the bridge and connect it to the ROS bridge
+	val bridge = new RosBridge()
+	bridge.connect(rosbridgeWebsocketURI, true)
+
+	// wait for the completion of the release of the item
+	in("releaseCompleted")@self
+
+	// wait for a short delay before moving the arm
+	Thread.sleep(1000)
+
+	// Initialize a publisher for the topic related to the control of the robot arm
+	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
+
+	val JointTrajectory afterPose = new JointTrajectory().positions(#[
+		0.000,
+		0.000,
+		0.000,
+		0.000,
+		0.000,
+		0.000
+	]).jointNames(#[
+		"joint1",
+		"joint2",
+		"joint3",
+		"joint4",
+		"joint5",
+		"joint6"
+	]);
+	pub.publish(afterPose);
+}

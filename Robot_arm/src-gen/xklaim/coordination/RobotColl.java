@@ -18,25 +18,21 @@ public class RobotColl extends LogicalNet {
     private static class ArmProcess extends KlavaNodeCoordinator {
       @Override
       public void executeProcess() {
-        try {
-          final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
-          GetDown _getDown = new GetDown(rosbridgeWebsocketURI);
-          eval(_getDown, this.self);
-          Grip _grip = new Grip(rosbridgeWebsocketURI);
-          eval(_grip, this.self);
-          GetUp _getUp = new GetUp(rosbridgeWebsocketURI);
-          eval(_getUp, this.self);
-          Rotate _rotate = new Rotate(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
-          this.executeNodeProcess(_rotate);
-          Lay _lay = new Lay(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
-          this.executeNodeProcess(_lay);
-          Release _release = new Release(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
-          this.executeNodeProcess(_release);
-          GoInitialPosition _goInitialPosition = new GoInitialPosition(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
-          this.executeNodeProcess(_goInitialPosition);
-        } catch (Throwable _e) {
-          throw Exceptions.sneakyThrow(_e);
-        }
+        final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
+        GetDown _getDown = new GetDown(rosbridgeWebsocketURI);
+        eval(_getDown, this.self);
+        Grip _grip = new Grip(rosbridgeWebsocketURI);
+        eval(_grip, this.self);
+        GetUp _getUp = new GetUp(rosbridgeWebsocketURI);
+        eval(_getUp, this.self);
+        Rotate _rotate = new Rotate(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
+        eval(_rotate, this.self);
+        Lay _lay = new Lay(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
+        eval(_lay, this.self);
+        Release _release = new Release(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
+        eval(_release, this.self);
+        GoToInitialPosition _goToInitialPosition = new GoToInitialPosition(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
+        eval(_goToInitialPosition, this.self);
       }
     }
     

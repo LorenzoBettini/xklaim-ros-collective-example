@@ -51,6 +51,7 @@ proc GetUp(String rosbridgeWebsocketURI) {
 
 			if (norm <= tolerance) {
 				// the arm has completed the grip movement
+				
 				// activate the rotate process
 				out("getUpCompleted")@local
 

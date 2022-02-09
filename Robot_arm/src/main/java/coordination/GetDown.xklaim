@@ -72,7 +72,7 @@ proc GetDown(String rosbridgeWebsocketURI) {
 				out("getDownMovementsCompleted")@local
 
 				// unsubscribe from the arm state topic
-				bridge.unsubscribe("/arm_controller/state")
+				bridge.unsubscribe("/arm_controller/state")				
 			}
 		]
 	)
