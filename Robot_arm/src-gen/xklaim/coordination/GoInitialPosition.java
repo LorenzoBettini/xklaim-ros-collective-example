@@ -31,11 +31,8 @@ public class GoInitialPosition extends KlavaProcess {
     final Locality myself = this.self;
     final RosBridge bridge = new RosBridge();
     bridge.connect(this.rosbridgeWebsocketURI, true);
-    String ready = null;
-    Tuple _Tuple = new Tuple(new Object[] {"ready", String.class});
-    in(_Tuple, myself);
-    ready = (String) _Tuple.getItem(1);
-    InputOutput.<String>println(String.format("%s to take the object", ready));
+    in(new Tuple(new Object[] {"opened"}), myself);
+    InputOutput.<String>println(String.format("ready to take the object"));
     final Publisher pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode error = data.get("msg").get("actual").get("positions");

@@ -22,9 +22,12 @@ proc Moveto(String rosbridgeWebsocketURI,Locality arm) {
 		.posePositionXY(x, y)
 		.poseOrientation(w);
 	pub.publish(posesta);
-	out("arrived", "arrived")@arm
+	
+	// stop the robot movement
 	val pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
 	val twistMsg = new Twist();
 	pubvel.publish(twistMsg);
-	out("ready", "ready")@arm
+	
+	// notify that is ready to receive the item
+	out("ready")@arm
 }

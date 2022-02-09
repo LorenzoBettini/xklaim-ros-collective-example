@@ -6,7 +6,6 @@ import ros.Publisher
 import ros.RosBridge
 
 proc Lay(String rosbridgeWebsocketURI,Locality robot2) {
-	val myself = self
 
 	// Create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
@@ -16,8 +15,9 @@ proc Lay(String rosbridgeWebsocketURI,Locality robot2) {
 	val pub = new Publisher("/arm_controller/command", "trajectory_msgs/JointTrajectory", bridge);
 
 	// here when the robot send message arrived, the arm should pose the object.
-	in("arrived", var String arrived)@myself
-	println(String.format("I am: %s,", arrived))
+	in("ready")@self
+	
+	
 	val JointTrajectory posefinal = new JointTrajectory().positions(#[
 		-0.9546,
 		-0.0097,

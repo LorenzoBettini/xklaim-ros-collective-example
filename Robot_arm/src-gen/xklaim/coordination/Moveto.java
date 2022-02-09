@@ -35,10 +35,9 @@ public class Moveto extends KlavaProcess {
     w = (Double) _Tuple.getItem(3);
     final PoseStamped posesta = new PoseStamped().headerFrameId("world").posePositionXY((x).doubleValue(), (y).doubleValue()).poseOrientation((w).doubleValue());
     pub.publish(posesta);
-    out(new Tuple(new Object[] {"arrived", "arrived"}), this.arm);
     final Publisher pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
     final Twist twistMsg = new Twist();
     pubvel.publish(twistMsg);
-    out(new Tuple(new Object[] {"ready", "ready"}), this.arm);
+    out(new Tuple(new Object[] {"ready"}), this.arm);
   }
 }

@@ -27,6 +27,7 @@ public class Release extends KlavaProcess {
   
   @Override
   public void executeProcess() {
+    final Locality local = this.self;
     final RosBridge bridge = new RosBridge();
     bridge.connect(this.rosbridgeWebsocketURI, true);
     final Publisher pub = new Publisher("/gripper_controller/command", "trajectory_msgs/JointTrajectory", bridge);
@@ -53,6 +54,7 @@ public class Release extends KlavaProcess {
         InputOutput.<String>println(String.format("I am opening"));
         bridge.unsubscribe("/gripper_controller/state");
         out(new Tuple(new Object[] {"open", "gripper"}), this.robot2);
+        out(new Tuple(new Object[] {"opened"}), local);
       }
     };
     bridge.subscribe(
