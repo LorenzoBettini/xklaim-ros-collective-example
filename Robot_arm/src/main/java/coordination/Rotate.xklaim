@@ -28,6 +28,9 @@ proc Rotate(String rosbridgeWebsocketURI,Locality deliveryRobot) {
 
 	// wait for the completion of the get up movement
 	in("getUpCompleted")@self
+	
+	// call the delivery robot
+	out("goto1", "world",-0.25, -2.67, 1.0)@deliveryRobot
 
 	// publish the trajectory to rotate the arm	 
 	pub.publish(rotateTrajectory)
@@ -53,9 +56,6 @@ proc Rotate(String rosbridgeWebsocketURI,Locality deliveryRobot) {
 				// the arm has completed the rotation movement
 				// activate the get up process
 				out("rotationCompleted")@local
-
-				// call the delivery robot
-				out("goto1", "world",-0.25, -2.67, 1.0)@deliveryRobot
 
 				// unsubscribe from the arm state topic
 				bridge.unsubscribe("/arm_controller/state")

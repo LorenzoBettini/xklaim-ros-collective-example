@@ -45,8 +45,6 @@ proc GetUp(String rosbridgeWebsocketURI) {
 			var delta = 0.0
 			val tolerance = 0.008
 			for (var i = 0; i < jointPositions.size; i++) {
-				// val desire = #[-3.1417061706596003, -0.28618833559546175, -0.49998813405672404, 3.1396898889426783, 1.6612913247682046, -0.0142]
-				// delta += Math.pow(actual.get(i).asDouble() - desire.get(i), 2.0);
 				delta += Math.pow(actual.get(i).asDouble() - jointPositions.get(i), 2.0)
 			}
 			val norm = Math.sqrt(delta)
