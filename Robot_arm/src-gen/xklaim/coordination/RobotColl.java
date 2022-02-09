@@ -54,9 +54,10 @@ public class RobotColl extends LogicalNet {
       @Override
       public void executeProcess() {
         try {
-          Moveto _moveto = new Moveto(RobotColl.Arm);
+          final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
+          Moveto _moveto = new Moveto(rosbridgeWebsocketURI, RobotColl.Arm);
           this.executeNodeProcess(_moveto);
-          GiveObject _giveObject = new GiveObject();
+          GiveObject _giveObject = new GiveObject(rosbridgeWebsocketURI);
           this.executeNodeProcess(_giveObject);
         } catch (Throwable _e) {
           throw Exceptions.sneakyThrow(_e);

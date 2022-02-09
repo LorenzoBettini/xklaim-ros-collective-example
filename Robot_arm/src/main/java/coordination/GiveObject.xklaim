@@ -9,15 +9,16 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.JsonNode
 import coordination.ContactsState
 
-proc GiveObject() {
-	val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"
-	val myself = self
-	// Create the bridge and connect it to the ROS bridge
-	in("open", var String gripper)@myself
-	println(String.format("The %s is opening", gripper));
+proc GiveObject(String rosbridgeWebsocketURI) {
+	val local = self
+	
+	// create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
-
+	
+	in("open", var String gripper)@local
+	println(String.format("The %s is opening", gripper));
+	
 	// Initialize a publisher for the topic related to the control of the robot's arm
 	val pub = new Publisher("/robot1/move_base_simple/goal", "geometry_msgs/PoseStamped", bridge);
 
@@ -31,7 +32,7 @@ proc GiveObject() {
 				// print(state.states.get(0).collision1_name)
 				// unit_box_2 is the name of the object
 				if (state.states.get(0).collision1_name == "unit_box_2::link::collision") {
-					in("give", var String frame_id, var Double x, var Double y, var Double w)@myself
+					in("give", var String frame_id, var Double x, var Double y, var Double w)@local
 					val giveobject = new PoseStamped()
 						.headerFrameId(frame_id)
 						.posePositionXY(x, y)

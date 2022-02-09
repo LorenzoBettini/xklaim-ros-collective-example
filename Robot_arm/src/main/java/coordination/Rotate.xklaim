@@ -30,7 +30,10 @@ proc Rotate(String rosbridgeWebsocketURI,Locality deliveryRobot) {
 	in("getUpCompleted")@self
 	
 	// call the delivery robot
-	out("goto1", "world",-0.25, -2.67, 1.0)@deliveryRobot
+	val x = -0.25
+	val y = -2.67
+	val w = 1.0
+	out("comeHere",x, y, w)@deliveryRobot
 
 	// publish the trajectory to rotate the arm	 
 	pub.publish(rotateTrajectory)

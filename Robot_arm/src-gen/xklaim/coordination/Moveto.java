@@ -10,30 +10,30 @@ import ros.msgs.geometry_msgs.Twist;
 
 @SuppressWarnings("all")
 public class Moveto extends KlavaProcess {
+  private String rosbridgeWebsocketURI;
+  
   private Locality arm;
   
-  public Moveto(final Locality arm) {
+  public Moveto(final String rosbridgeWebsocketURI, final Locality arm) {
     super("xklaim.coordination.Moveto");
+    this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
     this.arm = arm;
   }
   
   @Override
   public void executeProcess() {
-    final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
     final RosBridge bridge = new RosBridge();
-    bridge.connect(rosbridgeWebsocketURI, true);
+    bridge.connect(this.rosbridgeWebsocketURI, true);
     final Publisher pub = new Publisher("/robot1/move_base_simple/goal", "geometry_msgs/PoseStamped", bridge);
-    String frame_id = null;
     Double x = null;
     Double y = null;
     Double w = null;
-    Tuple _Tuple = new Tuple(new Object[] {"goto1", String.class, Double.class, Double.class, Double.class});
+    Tuple _Tuple = new Tuple(new Object[] {"comeHere", Double.class, Double.class, Double.class});
     in(_Tuple, this.self);
-    frame_id = (String) _Tuple.getItem(1);
-    x = (Double) _Tuple.getItem(2);
-    y = (Double) _Tuple.getItem(3);
-    w = (Double) _Tuple.getItem(4);
-    final PoseStamped posesta = new PoseStamped().headerFrameId(frame_id).posePositionXY((x).doubleValue(), (y).doubleValue()).poseOrientation((w).doubleValue());
+    x = (Double) _Tuple.getItem(1);
+    y = (Double) _Tuple.getItem(2);
+    w = (Double) _Tuple.getItem(3);
+    final PoseStamped posesta = new PoseStamped().headerFrameId("world").posePositionXY((x).doubleValue(), (y).doubleValue()).poseOrientation((w).doubleValue());
     pub.publish(posesta);
     out(new Tuple(new Object[] {"arrived", "arrived"}), this.arm);
     final Publisher pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);

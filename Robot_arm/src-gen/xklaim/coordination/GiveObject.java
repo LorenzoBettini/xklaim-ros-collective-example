@@ -18,21 +18,23 @@ import ros.SubscriptionRequestMsg;
 
 @SuppressWarnings("all")
 public class GiveObject extends KlavaProcess {
-  public GiveObject() {
+  private String rosbridgeWebsocketURI;
+  
+  public GiveObject(final String rosbridgeWebsocketURI) {
     super("xklaim.coordination.GiveObject");
+    this.rosbridgeWebsocketURI = rosbridgeWebsocketURI;
   }
   
   @Override
   public void executeProcess() {
-    final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
-    final Locality myself = this.self;
+    final Locality local = this.self;
+    final RosBridge bridge = new RosBridge();
+    bridge.connect(this.rosbridgeWebsocketURI, true);
     String gripper = null;
     Tuple _Tuple = new Tuple(new Object[] {"open", String.class});
-    in(_Tuple, myself);
+    in(_Tuple, local);
     gripper = (String) _Tuple.getItem(1);
     InputOutput.<String>println(String.format("The %s is opening", gripper));
-    final RosBridge bridge = new RosBridge();
-    bridge.connect(rosbridgeWebsocketURI, true);
     final Publisher pub = new Publisher("/robot1/move_base_simple/goal", "geometry_msgs/PoseStamped", bridge);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       ObjectMapper mapper = new ObjectMapper();
@@ -46,7 +48,7 @@ public class GiveObject extends KlavaProcess {
           Double y = null;
           Double w = null;
           Tuple _Tuple_1 = new Tuple(new Object[] {"give", String.class, Double.class, Double.class, Double.class});
-          in(_Tuple_1, myself);
+          in(_Tuple_1, local);
           frame_id = (String) _Tuple_1.getItem(1);
           x = (Double) _Tuple_1.getItem(2);
           y = (Double) _Tuple_1.getItem(3);

@@ -36,7 +36,10 @@ public class Rotate extends KlavaProcess {
     final JointTrajectory rotateTrajectory = new JointTrajectory().positions(((double[])Conversions.unwrapArray(jointPositions, double.class))).jointNames(
       new String[] { "joint1", "joint2", "joint3", "joint4", "joint5", "joint6" });
     in(new Tuple(new Object[] {"getUpCompleted"}), this.self);
-    out(new Tuple(new Object[] {"goto1", "world", (-0.25), (-2.67), 1.0}), this.deliveryRobot);
+    final double x = (-0.25);
+    final double y = (-2.67);
+    final double w = 1.0;
+    out(new Tuple(new Object[] {"comeHere", x, y, w}), this.deliveryRobot);
     pub.publish(rotateTrajectory);
     final RosListenDelegate _function = (JsonNode data, String stringRep) -> {
       final JsonNode actual = data.get("msg").get("actual").get("positions");
