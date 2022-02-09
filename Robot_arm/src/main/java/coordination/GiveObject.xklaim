@@ -41,7 +41,7 @@ proc GiveObject(String rosbridgeWebsocketURI) {
 					val pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
 					val twistMsg = new Twist();
 					pubvel.publish(twistMsg);
-					println(String.format("Object is given"))
+					out("itemDelivered")@local
 				}
 			} catch (Exception e) {
 			}

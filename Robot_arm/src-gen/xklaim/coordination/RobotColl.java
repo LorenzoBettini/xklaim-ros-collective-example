@@ -2,6 +2,7 @@ package xklaim.coordination;
 
 import klava.LogicalLocality;
 import klava.PhysicalLocality;
+import klava.Tuple;
 import klava.topology.ClientNode;
 import klava.topology.KlavaNodeCoordinator;
 import klava.topology.LogicalNet;
@@ -33,6 +34,9 @@ public class RobotColl extends LogicalNet {
         eval(_release, this.self);
         GoToInitialPosition _goToInitialPosition = new GoToInitialPosition(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
         eval(_goToInitialPosition, this.self);
+        in(new Tuple(new Object[] {"initialPositionReached"}), this.self);
+        in(new Tuple(new Object[] {"itemDelivered"}), RobotColl.DeliveryRobot);
+        System.exit(0);
       }
     }
     

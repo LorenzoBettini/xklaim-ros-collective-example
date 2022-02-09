@@ -18,6 +18,10 @@ net RobotColl physical "localhost:9999" {
 						
 		eval(new GoToInitialPosition(rosbridgeWebsocketURI,DeliveryRobot))@self
 		
+		in("initialPositionReached")@self
+		in("itemDelivered")@DeliveryRobot
+		System.exit(0)
+		
 	}
 	node DeliveryRobot {
 		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090"

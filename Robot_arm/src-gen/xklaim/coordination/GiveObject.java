@@ -10,7 +10,6 @@ import klava.Locality;
 import klava.Tuple;
 import klava.topology.KlavaProcess;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import ros.Publisher;
 import ros.RosBridge;
 import ros.RosListenDelegate;
@@ -52,7 +51,7 @@ public class GiveObject extends KlavaProcess {
           final Publisher pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
           final Twist twistMsg = new Twist();
           pubvel.publish(twistMsg);
-          InputOutput.<String>println(String.format("Object is given"));
+          out(new Tuple(new Object[] {"itemDelivered"}), local);
         }
       } catch (final Throwable _t) {
         if (_t instanceof Exception) {

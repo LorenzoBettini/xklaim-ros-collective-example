@@ -12,7 +12,7 @@ proc Release(String rosbridgeWebsocketURI,Locality deliveryRobot) {
 	// create the bridge and connect it to the ROS bridge
 	val bridge = new RosBridge()
 	bridge.connect(rosbridgeWebsocketURI, true)
-
+	
 	in("layCompleted")@self
 
 	// initialize a publisher for the topic related to the control of the gripper
