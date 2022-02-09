@@ -4,11 +4,11 @@ net RobotColl physical "localhost:9999" {
 	node Arm {
 		val rosbridgeWebsocketURI = "ws://0.0.0.0:9090" 
 		
-		executeNodeProcess(new GetDown(rosbridgeWebsocketURI))
+		eval(new GetDown(rosbridgeWebsocketURI))@self
 			
-		executeNodeProcess(new Grip(rosbridgeWebsocketURI))
+		eval(new Grip(rosbridgeWebsocketURI))@self
 		
-		executeNodeProcess(new GetUp(rosbridgeWebsocketURI))
+		eval(new GetUp(rosbridgeWebsocketURI))@self
 		
 		executeNodeProcess(new Rotate(rosbridgeWebsocketURI,DeliveryRobot))
 	 

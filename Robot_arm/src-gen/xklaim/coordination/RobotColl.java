@@ -21,11 +21,11 @@ public class RobotColl extends LogicalNet {
         try {
           final String rosbridgeWebsocketURI = "ws://0.0.0.0:9090";
           GetDown _getDown = new GetDown(rosbridgeWebsocketURI);
-          this.executeNodeProcess(_getDown);
+          eval(_getDown, this.self);
           Grip _grip = new Grip(rosbridgeWebsocketURI);
-          this.executeNodeProcess(_grip);
+          eval(_grip, this.self);
           GetUp _getUp = new GetUp(rosbridgeWebsocketURI);
-          this.executeNodeProcess(_getUp);
+          eval(_getUp, this.self);
           Rotate _rotate = new Rotate(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
           this.executeNodeProcess(_rotate);
           Lay _lay = new Lay(rosbridgeWebsocketURI, RobotColl.DeliveryRobot);
