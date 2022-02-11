@@ -46,7 +46,7 @@ public class MovetoArm extends KlavaProcess {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rosMsgNode = data.get("msg");
         PoseWithCovarianceStamped current_position = mapper.<PoseWithCovarianceStamped>treeToValue(rosMsgNode, PoseWithCovarianceStamped.class);
-        final double tolerance = 0.1;
+        final double tolerance = 0.16;
         double deltaX = (current_position.pose.pose.position.x - destination.pose.position.x);
         double deltaY = (current_position.pose.pose.position.y - destination.pose.position.y);
         if (((deltaX <= tolerance) && (deltaY <= tolerance))) {

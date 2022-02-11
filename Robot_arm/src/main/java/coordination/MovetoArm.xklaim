@@ -38,11 +38,10 @@ proc MovetoArm(String rosbridgeWebsocketURI,Locality arm) {
 
 			// calculate the delta between the actual position and the destination position
 			// to measure the completeness of the movement
-			val tolerance = 0.1
+			val tolerance = 0.16
 			var deltaX = current_position.pose.pose.position.x - destination.pose.position.x
 			var deltaY = current_position.pose.pose.position.y - destination.pose.position.y
 
-			// we neglect the orientation "w" 
 			if (deltaX <= tolerance && deltaY <= tolerance) {
 				// the robot arrived to destination
 				
