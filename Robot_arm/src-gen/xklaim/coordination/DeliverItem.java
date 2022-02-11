@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Objects;
 import coordination.ContactState;
 import coordination.ContactsState;
-import coordination.ModelState;
 import coordination.PoseStamped;
 import coordination.PoseWithCovarianceStamped;
 import coordination.Twist;
@@ -73,16 +72,6 @@ public class DeliverItem extends KlavaProcess {
           final Twist twistMsg = new Twist();
           pubvel.publish(twistMsg);
           out(new Tuple(new Object[] {"itemDelivered"}), local);
-          final Publisher gazebo = new Publisher("/gazebo/set_model_state", "gazebo_msgs/ModelState", bridge);
-          final ModelState modelstate = new ModelState();
-          modelstate.twist.linear.x = 3.0;
-          modelstate.twist.angular.z = 1.0;
-          modelstate.pose.position.x = (-46.0);
-          modelstate.pose.position.y = 46.0;
-          modelstate.pose.position.z = 0.0;
-          modelstate.model_name = "unit_box_2";
-          modelstate.reference_frame = "world";
-          gazebo.publish(modelstate);
           bridge.unsubscribe("/robot1/amcl_pose");
         }
       } catch (Throwable _e) {

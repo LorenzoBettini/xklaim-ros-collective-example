@@ -3,7 +3,6 @@ package xklaim.coordination
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import coordination.ContactsState
-import coordination.ModelState
 import coordination.PoseStamped
 import coordination.PoseWithCovarianceStamped
 import coordination.Twist
@@ -73,19 +72,6 @@ proc DeliverItem(String rosbridgeWebsocketURI) {
 
 				// notify that the item has been delivered
 				out("itemDelivered")@local
-				
-				
-				// ******** to make the item disappear *****
-				val gazebo = new Publisher("/gazebo/set_model_state", "gazebo_msgs/ModelState", bridge);
-				val modelstate = new ModelState();
-				modelstate.twist.linear.x = 3.0;
-				modelstate.twist.angular.z = 1.0;
-				modelstate.pose.position.x = -46.0;
-				modelstate.pose.position.y = 46.0;
-				modelstate.pose.position.z = 0.0;
-				modelstate.model_name = "unit_box_2";
-				modelstate.reference_frame = "world"
-				gazebo.publish(modelstate);
 
 				// unsubscribe from the position topic
 				bridge.unsubscribe("/robot1/amcl_pose")
