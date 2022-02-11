@@ -1,8 +1,13 @@
 package xklaim.coordination
 
-import ros.RosBridge
-import ros.Publisher
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import coordination.PoseStamped
+import coordination.PoseWithCovarianceStamped
+import klava.Locality
+import ros.Publisher
+import ros.RosBridge
+import ros.SubscriptionRequestMsg
 import ros.msgs.geometry_msgs.Twist
 
 proc MovetoArm(String rosbridgeWebsocketURI,Locality arm) {
@@ -18,19 +23,39 @@ proc MovetoArm(String rosbridgeWebsocketURI,Locality arm) {
 	in("comeHere", var Double x, var Double y, var Double w)@self
 
 	// publish the destination position
-	val destination = new PoseStamped()
-		.headerFrameId("world")
-		.posePositionXY(x, y)
-		.poseOrientation(w);
+	val destination = new PoseStamped().headerFrameId("world").posePositionXY(x, y).poseOrientation(w);
 	pub.publish(destination);
-	
-	// stop the robot movement
-	val pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
-	val twistMsg = new Twist();
-	pubvel.publish(twistMsg);
-	
-	// TODO: add here a subscribe block for waiting until the destination position is reached
-	
-	// notify that is ready to receive the item
-	out("ready")@arm
+
+	// waiting until the destination position is reached
+	bridge.subscribe(
+		SubscriptionRequestMsg.generate("/robot1/amcl_pose").setType("geometry_msgs/PoseWithCovarianceStamped").
+			setThrottleRate(1).setQueueLength(1),
+		[ data, stringRep |
+			// extract the actual joint positions from the delivery robot's status	
+			var mapper = new ObjectMapper();
+			var JsonNode rosMsgNode = data.get("msg");
+			var PoseWithCovarianceStamped current_position = mapper.treeToValue(rosMsgNode, PoseWithCovarianceStamped);
+
+			// calculate the delta between the actual position and the destination position
+			// to measure the completeness of the movement
+			val tolerance = 0.1
+			var deltaX = current_position.pose.pose.position.x - destination.pose.position.x
+			var deltaY = current_position.pose.pose.position.y - destination.pose.position.y
+
+			// we neglect the orientation "w" 
+			if (deltaX <= tolerance && deltaY <= tolerance) {
+				// the robot arrived to destination
+				
+				// stop the robot movement
+				val pubvel = new Publisher("/robot1/cmd_vel", "geometry_msgs/Twist", bridge);
+				val twistMsg = new Twist();
+				pubvel.publish(twistMsg);
+				
+				// notify that is ready to receive the item
+				out("ready")@arm
+				// unsubscribe from the robot state topic
+				bridge.unsubscribe("/robot1/amcl_pose")
+			}
+		]
+	)
 }
